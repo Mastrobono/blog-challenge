@@ -117,6 +117,34 @@ const config: Config = {
             fontWeight: "600",
           },
         ],
+        "card-title": [
+          "21px",
+          {
+            lineHeight: "1.5",
+            fontWeight: "700",
+          },
+        ],
+        "card-title-large": [
+          "41px",
+          {
+            lineHeight: "1.3",
+            fontWeight: "700",
+          },
+        ],
+        "card-readtime": [
+          "14px",
+          {
+            lineHeight: "1.6",
+            fontWeight: "400",
+          },
+        ],
+        "card-author": [
+          "20px",
+          {
+            lineHeight: "1.8",
+            fontWeight: "400",
+          },
+        ],
         "xs-label": [
           "12px",
           {

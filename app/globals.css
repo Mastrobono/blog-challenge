@@ -32,6 +32,10 @@
   --font-size-base-semibold: 16px;
   --font-size-sm-regular: 14px;
   --font-size-sm-semibold: 14px;
+  --font-size-card-title: 21px;
+  --font-size-card-title-large: 41px;
+  --font-size-card-readtime: 14px;
+  --font-size-card-author: 20px;
   --font-size-xs-label: 12px;
 
   --font-weight-h-related: 700;
@@ -47,6 +51,10 @@
   --font-weight-base-semibold: 600;
   --font-weight-sm-regular: 400;
   --font-weight-sm-semibold: 600;
+  --font-weight-card-title: 700;
+  --font-weight-card-title-large: 700;
+  --font-weight-card-readtime: 400;
+  --font-weight-card-author: 400;
   --font-weight-xs-label: 500;
 
   --line-height-h-related: 1.35;
@@ -62,6 +70,10 @@
   --line-height-base-semibold: 1.5;
   --line-height-sm-regular: 1.8;
   --line-height-sm-semibold: 1.8;
+  --line-height-card-title: 1.5;
+  --line-height-card-title-large: 1.3;
+  --line-height-card-readtime: 1.6;
+  --line-height-card-author: 1.8;
   --line-height-xs-label: 1.8;
 }
 
@@ -159,6 +171,30 @@
     font-size: var(--font-size-sm-semibold);
     font-weight: var(--font-weight-sm-semibold);
     line-height: var(--line-height-sm-semibold);
+  }
+
+  .text-card-title {
+    font-size: var(--font-size-card-title);
+    font-weight: var(--font-weight-card-title);
+    line-height: var(--line-height-card-title);
+  }
+
+  .text-card-title-large {
+    font-size: var(--font-size-card-title-large);
+    font-weight: var(--font-weight-card-title-large);
+    line-height: var(--line-height-card-title-large);
+  }
+
+  .text-card-readtime {
+    font-size: var(--font-size-card-readtime);
+    font-weight: var(--font-weight-card-readtime);
+    line-height: var(--line-height-card-readtime);
+  }
+
+  .text-card-author {
+    font-size: var(--font-size-card-author);
+    font-weight: var(--font-weight-card-author);
+    line-height: var(--line-height-card-author);
   }
 
   .text-xs-label {

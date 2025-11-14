@@ -37,7 +37,7 @@ const LoaderBar = React.forwardRef<HTMLDivElement, LoaderBarProps>(
             </span>
           )}
           {status === "success" && (
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
               <span className="text-base-medium-tight text-neutral-black align-middle">
                 Upload successful
               </span>
@@ -45,25 +45,25 @@ const LoaderBar = React.forwardRef<HTMLDivElement, LoaderBarProps>(
                 src="/assets/check-successful.svg"
                 alt="Success"
                 className="w-5 h-5"
-              />
+                />
             </div>
-          )}
-        </div>
+            )}
+          </div>
 
         {/* Second row: Progress bar */}
-        <div
-          className={clsx(
+            <div
+              className={clsx(
             "w-full h-[10px] overflow-hidden mb-2",
             status === "loading" && "bg-neutral-gray-light",
             status === "failure" && "bg-status-fail",
             status === "success" && "bg-neutral-black"
-          )}
-        >
+              )}
+            >
           {status === "loading" && (
-            <div
+              <div
               className="h-full bg-neutral-black transition-all duration-300 ease-out"
-              style={{ width: `${clampedProgress}%` }}
-            />
+                style={{ width: `${clampedProgress}%` }}
+              />
           )}
           {status === "failure" && (
             <div className="h-full w-full bg-status-fail" />
@@ -71,29 +71,29 @@ const LoaderBar = React.forwardRef<HTMLDivElement, LoaderBarProps>(
           {status === "success" && (
             <div className="h-full w-full bg-neutral-black" />
           )}
-        </div>
+            </div>
 
         {/* Third row: Action button (aligned to end) */}
         <div className="flex justify-end">
-          {status === "loading" && onCancel && (
-            <button
-              type="button"
-              onClick={onCancel}
+                {status === "loading" && onCancel && (
+                  <button
+                    type="button"
+                    onClick={onCancel}
               className="text-base-semibold text-neutral-black hover:text-neutral-dark-gray cursor-pointer"
-            >
-              Cancel
-            </button>
-          )}
-          {status === "failure" && onRetry && (
-            <button
-              type="button"
-              onClick={onRetry}
+                  >
+                    Cancel
+                  </button>
+                )}
+                {status === "failure" && onRetry && (
+                  <button
+                    type="button"
+                    onClick={onRetry}
               className="text-base-semibold text-neutral-black hover:text-neutral-dark-gray cursor-pointer"
-            >
-              Retry
-            </button>
-          )}
-        </div>
+                  >
+                    Retry
+                  </button>
+                )}
+              </div>
       </div>
     );
   }
