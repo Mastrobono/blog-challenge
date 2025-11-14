@@ -19,6 +19,7 @@ const config: Config = {
         "shadow-focus": "hsl(275, 47%, 90%)",
         "neutral-lightest": "hsl(0, 0%, 96%)",
         "bg-lavender": "hsl(259, 53%, 97%)",
+        "disabled-bg": "#FEFDF9",
       },
       fontFamily: {
         sans: ["var(--font-space-grotesk)", "Space Grotesk", "sans-serif"],

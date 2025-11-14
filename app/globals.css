@@ -1,5 +1,59 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary-lime: #D8F34E;
+  --color-neutral-black: #000000;
+  --color-neutral-gray-light: #8C8C8C;
+  --color-brand-indigo: #240F36;
+  --color-neutral-dark-gray: #595959;
+  --color-neutral-white: #FFFFFF;
+  --color-status-fail: #E80000;
+  --color-shadow-focus: #B97AE6;
+  --color-neutral-lightest: #F5F5F5;
+  --color-bg-lavender: #9E74F7;
+  --color-disabled-bg: #FEFDF9;
+
+  --shadow-hard-black: 10px 10px 0 0 rgba(0, 0, 0, 1);
+  --shadow-focus-blur: 0 0 0 4px #B97AE6;
+
+  /* Typography tokens */
+  --font-size-h-related: 35px;
+  --font-size-h-modal: 35px;
+  --font-size-xl-semibold: 27px;
+  --font-size-xl-regular: 27px;
+  --font-size-lg-bold: 18px;
+  --font-size-lg-medium: 18px;
+  --font-size-b-modal: 18px;
+  --font-size-base-placeholder: 16px;
+  --font-size-sm-regular: 14px;
+  --font-size-sm-semibold: 14px;
+  --font-size-xs-label: 12px;
+
+  --font-weight-h-related: 700;
+  --font-weight-h-modal: 500;
+  --font-weight-xl-semibold: 600;
+  --font-weight-xl-regular: 400;
+  --font-weight-lg-bold: 700;
+  --font-weight-lg-medium: 500;
+  --font-weight-b-modal: 400;
+  --font-weight-base-placeholder: 500;
+  --font-weight-sm-regular: 400;
+  --font-weight-sm-semibold: 600;
+  --font-weight-xs-label: 500;
+
+  --line-height-h-related: 1.35;
+  --line-height-h-modal: 1.35;
+  --line-height-xl-semibold: 1.35;
+  --line-height-xl-regular: 1.35;
+  --line-height-lg-bold: 1.8;
+  --line-height-lg-medium: 1.8;
+  --line-height-b-modal: 1.8;
+  --line-height-base-placeholder: 1.8;
+  --line-height-sm-regular: 1.8;
+  --line-height-sm-semibold: 1.8;
+  --line-height-xs-label: 1.8;
+}
+
 @layer base {
   body {
     @apply font-sans antialiased;
@@ -15,5 +69,72 @@
   /* Modal Input Base Styles */
   .modal-input-base {
     @apply w-[400px] h-14 p-2 border-t-2 border-neutral-black;
+  }
+
+  /* Typography token classes */
+  .text-h-related {
+    font-size: var(--font-size-h-related);
+    font-weight: var(--font-weight-h-related);
+    line-height: var(--line-height-h-related);
+  }
+
+  .text-h-modal {
+    font-size: var(--font-size-h-modal);
+    font-weight: var(--font-weight-h-modal);
+    line-height: var(--line-height-h-modal);
+  }
+
+  .text-xl-semibold {
+    font-size: var(--font-size-xl-semibold);
+    font-weight: var(--font-weight-xl-semibold);
+    line-height: var(--line-height-xl-semibold);
+  }
+
+  .text-xl-regular {
+    font-size: var(--font-size-xl-regular);
+    font-weight: var(--font-weight-xl-regular);
+    line-height: var(--line-height-xl-regular);
+  }
+
+  .text-lg-bold {
+    font-size: var(--font-size-lg-bold);
+    font-weight: var(--font-weight-lg-bold);
+    line-height: var(--line-height-lg-bold);
+  }
+
+  .text-lg-medium {
+    font-size: var(--font-size-lg-medium);
+    font-weight: var(--font-weight-lg-medium);
+    line-height: var(--line-height-lg-medium);
+  }
+
+  .text-b-modal {
+    font-size: var(--font-size-b-modal);
+    font-weight: var(--font-weight-b-modal);
+    line-height: var(--line-height-b-modal);
+  }
+
+  .text-base-placeholder {
+    font-size: var(--font-size-base-placeholder);
+    font-weight: var(--font-weight-base-placeholder);
+    line-height: var(--line-height-base-placeholder);
+  }
+
+  .text-sm-regular {
+    font-size: var(--font-size-sm-regular);
+    font-weight: var(--font-weight-sm-regular);
+    line-height: var(--line-height-sm-regular);
+  }
+
+  .text-sm-semibold {
+    font-size: var(--font-size-sm-semibold);
+    font-weight: var(--font-weight-sm-semibold);
+    line-height: var(--line-height-sm-semibold);
+  }
+
+  .text-xs-label {
+    font-size: var(--font-size-xs-label);
+    font-weight: var(--font-weight-xs-label);
+    line-height: var(--line-height-xs-label);
   }
 }
