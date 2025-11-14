@@ -18,7 +18,7 @@ type ChipProps =
 const Chip = React.forwardRef<HTMLDivElement, ChipProps>(
   ({ className, variant = "default", onRemove, children, ...props }, ref) => {
     const baseClasses =
-      "inline-flex items-center gap-2 h-[46px] px-4 rounded-[56px] transition-all duration-200";
+      "inline-flex items-center gap-2 h-[46px] px-4 rounded-[56px] transition-all duration-200 cursor-pointer";
 
     const stateClasses = clsx({
       // Active (Selected) state - always has remove button
@@ -42,7 +42,7 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>(
               e.stopPropagation();
               onRemove();
             }}
-            className="ml-1 flex items-center justify-center w-5 h-5 rounded-full hover:bg-neutral-black/10 transition-colors"
+            className="ml-1 flex items-center justify-center w-5 h-5 rounded-full hover:bg-neutral-black/10 transition-colors cursor-pointer"
             aria-label="Remove"
           >
             <img

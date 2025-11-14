@@ -6,7 +6,7 @@ import { clsx } from "clsx";
 
 const buttonVariants = cva(
   // Base styles for all buttons
-  "inline-flex items-center justify-center border-2 w-[112px] h-14 py-2 text-lg-medium transition-all duration-200 focus:outline-none disabled:cursor-not-allowed",
+  "inline-flex items-center justify-center border-2 w-[112px] h-14 py-2 text-lg-medium transition-all duration-200 focus:outline-none cursor-pointer disabled:cursor-not-allowed",
   {
     variants: {
       variant: {

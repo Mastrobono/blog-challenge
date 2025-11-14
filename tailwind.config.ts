@@ -88,6 +88,20 @@ const config: Config = {
             fontWeight: "400",
           },
         ],
+        "base-medium-tight": [
+          "16px",
+          {
+            lineHeight: "1.0",
+            fontWeight: "500",
+          },
+        ],
+        "base-semibold": [
+          "16px",
+          {
+            lineHeight: "1.5",
+            fontWeight: "600",
+          },
+        ],
         "sm-regular": [
           "14px",
           {
