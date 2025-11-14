@@ -1,2 +1,164 @@
-dev-Leandro-Mastrobono-frontend
-Litebox Challenge for Leandro Mastrobono (DEV)
+## 🏗️ Frontend Architectural Documentation
+
+This document outlines the planned architecture for the frontend application, detailing the technology choices, rendering strategies, component organization, and critical trade-offs.
+
+### 1. Technology Stack & Overview
+
+| **Component** | **Technology** | **Version** | **Role** |
+| --- | --- | --- | --- |
+| **Framework** | **Next.js** (App Router) | 16.x | Server-centric rendering, routing, and **View Transitions** for seamless navigation. |
+| **Styling** | **Tailwind CSS** | 4.x | Utility-first styling with custom tokens and layer-based architecture. |
+| **Complex Animation** | **GSAP** (GreenSock) | 3.x | High-performance, complex UI/UX animations (e.g., Hero sections). |
+| **Smooth Scrolling** | **Lenis** | 1.x | Implementation of native-feeling smooth scrolling for enhanced page fluidity. |
+| **Language** | **TypeScript** | 5.x | Enforces type safety across components and interfaces. |
+| **Client Data** | **@tanstack/react-query** | v5 | Client-side data fetching, caching, and **mutation management**. |
+
+### 2. Data Flow & Rendering Strategy (Hybrid Model)
+
+We employ a hybrid model to ensure **speed** for static content and **consistency** for user-mutable data.
+
+### A. Rendering Strategies
+
+| **Content Type** | **Technique** | **Rationale & Timing** |
+| --- | --- | --- |
+| **Stale Content (Home/Main Post)** | **ISR (Incremental Static Regeneration)** | Uses Server Components with `revalidate: 3600` (1 hour). This is budget-conscious and appropriate for general blog content. |
+| **Mutable Content (Related Posts)** | **CSR + SWR** (`react-query`) | Forced **Client Component** usage to manage mutations and cache consistency. |
+
+### B. API Consumption
+
+| **Service** | **Endpoint Example** | **Consumption Method** | **Responsibility** |
+| --- | --- | --- | --- |
+| **External API** | `/api/posts` | Server Component `fetch()` (ISR) | Read-Only (Initial data population). |
+| **Internal (NestJS) API** | `/api/posts/related` | Client Component `useQuery`/`useMutation` | Read/Write (User-generated posts, ensures consistency). |
+
+### 3. Component Organization & Naming
+
+Component organization follows standard best practices, separating reusable UI elements from section-specific logic.
+
+| **Directory** | **Component Name(s)** | **Rationale (Role in Features)** |
+| --- | --- | --- |
+| `components/layout/` | `Navbar.tsx`, `Footer.tsx` | Shared page framework elements only. |
+| `components/ui/` | `Button.tsx`, `Input.tsx`, `LoaderBar.tsx`, `Avatar.tsx`, `Chip.tsx`, `Badge.tsx` | **Atomic UI:** Reusable, stateless tokens-only elements. |
+| `components/features/` | **`NewPostModal.tsx`** | **CRITICAL:** Manages the multi-state creation workflow, form logic, and mutation. |
+|  | **`PostFilter.tsx`** | Manages filter state and renders `Chip` components. |
+|  | **`CTA.tsx`** | Composed element (Text + Button). |
+|  | **`Card.tsx`** | Composed, stateless data entity (Title, Badge, Button, Image). |
+|  | **`RichText.tsx`** | Applies specialized global typography to the main article markdown content. |
+|  | **`RelatedPosts.tsx`** | The complete list component tied to the user-generated data. |
+|  | **`MostViewedList.tsx`** | Composed list component (4 cards) with two styling variants (Black/White). |
+|  | **`SocialAside.tsx`** | The fixed social media sidebar specific to the post view. |
+
+### 4. Performance & UX Trade-offs
+
+| **ID** | **Trade-off Description** | **Rationale and Impact on Metrics** |
+| --- | --- | --- |
+| **T1** | **SplashScreen/LoaderScreen (Easter Egg)** | **Rationale:** Intentional 2-second client-side trivia screen (Lottie, filters) for a *'Wow'* factor (**a surprise** 🤫). 
+ **Impact:** The **TTI** (Time to Interactive) and main layout mounting will be **artificially delayed** by 2 seconds. FCP remains fast (as the simple background paints immediately), but we accept a lower TTI score for brand experience. |
+| **T2** | **CSR vs. ISR Consistency** | **Rationale:** The decision to use **Optimistic UI** for post creation necessitates that the `Related Posts` section be a Client Component using `react-query`. This ensures **persistence** after a hard refresh (F5), **avoiding the conflict** where the ISR cache serves "stale" data, reversing the optimistic update. 
+ **Impact:** We accept the penalty of **hydration** (skeleton/shimmer flash) to achieve critical data consistency. |
+| **T3** | **Accessibility vs. Design Fidelity** | The `Black` and `Outline Green` Button variants were designed without a distinct keyboard `focus` state. |
+
+# 🚧 Provisional Style Documentation
+
+This document serves as a reference for all design tokens and component usage extracted from the Figma files. It is an **Architectural Blueprint** guiding the initial implementation of Tailwind CSS classes.
+
+---
+
+### 1. Status and Goals
+
+> STATUS: Tokens Extracted, Component Blueprints Ready, and Required Assets Uploaded.
+OBJECTIVE: To begin development with defined classes, avoiding magic numbers and inconsistent styles.
+NOTE ON FIDELITY: The values used (colors, spacing, typography) are derived directly from the Figma assets. We understand that "pixel-perfect" implementation requires iteration and slight adjustments during the development. These tokens will be reviewed and adjusted, if necessary, to achieve 100% fidelity upon final review.
+> 
+
+### 2. Implementation Roadmap TODOs (Remaining Style Mapping)
+
+- **TODO: Markdown/Rich Text Styles:** Map all base HTML elements within the main article content (`h1`, `h2`, `p`, `img`, `blockquote`, etc.) for the Post Detail view.
+- **TODO: Most Viewed Posts:** Map the structural grid and token variants for the **Black Variant** (Home) and the **White Variant** (Post Detail Sidebar) list items.
+- **TODO: Page Containers:** Map the general container, grid, and padding styles for the main page wrappers (`Home` and `Post Detail`).
+
+---
+
+## 2. Token Source of Truth
+
+### 1. Colors
+
+| **Design Token** | **Semantic Name** | **Value (HSL / HEX)** | **Usage Principal** |
+| --- | --- | --- | --- |
+| Green (Primary) | `primary-lime` | `hsl(70, 68%, 95%)` | Modal BG, Button Default BG, Chip Active BG |
+| Black | `neutral-black` | `#000000` | Text, Borders, Button Hover BG |
+| Gray Light | `neutral-gray-light` | `hsl(0, 0%, 55%)` | Input Placeholder, Disabled Text/Border |
+| Headline Color | `brand-indigo` | `hsl(273, 72%, 21%)` | Modal Headline, Button Active BG, Written Input Text |
+| Dark Gray | `neutral-dark-gray` | `hsl(0, 0%, 35%)` | Card Time Text, Subheadline Text, Author Name Text |
+| White | `neutral-white` | `#FFFFFF` | Input Default BG, Button Text (Black Variant) |
+| Failure Status | `status-fail` | `hsl(0, 100%, 91%)` | Loader Fail Color, Input Error BG/Border |
+| Focus Shadow | `shadow-focus` | `hsl(275, 47%, 90%)` | Input Active Shadow Blur |
+| Disabled BG | `neutral-lightest` | `hsl(0, 0%, 96%)` | Input Disabled BG |
+| Footer/CTA BG | `bg-lavender` | `hsl(259, 53%, 97%)` | Footer/CTA Background |
+
+### 2. Typography
+
+| **Usage** | **Size (px)** | **Weight** | **Tailwind Key** |
+| --- | --- | --- | --- |
+| Related Header | 35px | 700 (Bold) | `text-h-related` |
+| Modal Headline | 35px | 500 (Medium) | `text-h-modal` |
+| CTA/Hero Text | 27px | 600 (SemiBold) | `text-xl-semibold` |
+| CTA Text | 27px | 400 (Regular) | **`text-xl-regular`** |
+| Card Title | 18px | 700 (Bold) | `text-lg-bold` |
+| Input/Button Text | 18px | 500 (Medium) | `text-lg-medium` |
+| Modal Subheadline/Author Name | 18px | 400 (Regular) | `text-b-modal` |
+| Input Placeholder | 16px | 500 (Medium) | `text-base-placeholder` |
+| Footer/Time Text | 14px | 400 (Regular) | `text-sm-regular` |
+| Card Badge | 14px | 600 (SemiBold) | `text-sm-semibold` |
+| Label/Help Text | 12px | 500 (Medium) | `text-xs-label`  |
+
+## 3. Component Usage Mappings
+
+### 1. Button Component Usage (`Button.tsx`)
+
+| **State/Variant** | **Background Token** | **Text Color Token** | **Border/Shadow** | **Sizing/Padding** |
+| --- | --- | --- | --- | --- |
+| **Base Styles (All)** | - | - | `border-2` | `w-[112px] h-14`, `py-2`, `text-lg-medium` |
+| **Primary (Default)** | `bg-primary-lime` | `text-brand-indigo` | `shadow-hard-black` | - |
+| **Primary (Hover)** | `bg-neutral-black` | `text-neutral-white` | `shadow-hard-black` | - |
+| **Focus (All Variants)** | *Special Logic* | - | Uses `border-2 border-neutral-black` override for visual feedback. | - |
+| **Secondary (Default)** | `bg-transparent` | `text-neutral-white` | `border-2 border-primary-lime` | - |
+| **Black (Default/H/F/A)** | `bg-neutral-black` | `text-neutral-white` | `shadow-hard-black` | - |
+| **Disabled (All)** | `opacity-50` | `text-neutral-gray-light` | No Shadow | - |
+
+### 2. Input Text Field Usage (`Input.tsx`)
+
+| **State** | **Border Style** | **Background Color** | **Text/Placeholder Color** | **Shadow / Label** |
+| --- | --- | --- | --- | --- |
+| **Default (Neutral)** | `border-t-2 border-neutral-black` | `bg-neutral-white` | `text-neutral-gray-light` (Placeholder) | No Shadow |
+| **Active (Focused)** | `border-t-2 border-neutral-black` | `bg-neutral-white` | `text-brand-indigo` (Written Text) | `shadow-focus-blur` on container, Label is visible. |
+| **Error** | `border-t-2 border-status-fail` | `bg-neutral-white` | `text-brand-indigo` | Help text uses `bg-status-fail`. |
+| **Disabled** | `border-2 border-neutral-gray-light` | `bg-neutral-lightest` | `text-neutral-gray-light` | - |
+
+### 3. Chip Component Usage (`Chip.tsx`)
+
+| **State/Variant** | **Background Token** | **Text Color Token** | **Border/Radius** | **Sizing** |
+| --- | --- | --- | --- | --- |
+| **Base Styles** | - | - | `rounded-[56px]`, `8px` Gap | `h-[46px]` |
+| **Active (Selected)** | `bg-primary-lime` | `text-neutral-black` | No Border | Includes 'X' Icon |
+| **Default (Unselected)** | `bg-transparent` | `text-neutral-gray-light` | `border border-neutral-gray-light` | No Icon |
+
+### 4. Modal Component Usage (`Modal.tsx`)
+
+| **Element** | **Property** | **Token / Utility Class** | **Notes** |
+| --- | --- | --- | --- |
+| **Container Base** | Frame Style | `bg-primary-lime`, `shadow-hard-black` | Encapsulated in `.modal-container-base` custom class. |
+| **Headline** | Text Color | `text-brand-indigo` | `text-h-modal` |
+
+### 5. Loader Bar Component Usage (`LoaderBar.tsx`)
+
+| **Element / State** | **Property** | **Token / Utility Class** | **Notes** |
+| --- | --- | --- | --- |
+| **Track (Unloaded Part)** | Background | `bg-neutral-gray-light` | The base color of the bar (Gray Light). |
+| **Progress (Loaded Part)** | Background | `bg-neutral-black` | The moving part showing progress. |
+| **Bar Height** | Height | `h-[10px]` | Fixed height from design. |
+| **Status Text (e.g., "Loading 50%")** | Typography | `text-base-placeholder` (16px, 500) | Assumed to use the standard 16px placeholder font. |
+| **Status Text (e.g., "Loading 50%")** | Text Color | `text-neutral-black` | Assumed standard black text. |
+| **Auxiliary Text (Cancel, Retry)** | Typography | `text-base-placeholder` | Should use the same 16px font size. |
+| **Failure Status** | Track Color | `bg-status-fail` | Entire bar track changes to the fail color (`hsl(0, 100%, 91%)`). |
+| **Success Status** | Icon | `checkmark.svg` | Replaces the percentage text/bar entirely upon completion. |
