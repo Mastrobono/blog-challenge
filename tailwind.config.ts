@@ -20,6 +20,7 @@ const config: Config = {
         "neutral-lightest": "hsl(0, 0%, 96%)",
         "bg-lavender": "hsl(259, 53%, 97%)",
         "disabled-bg": "#FEFDF9",
+        "arrow-purple": "#9C73F7",
       },
       fontFamily: {
         sans: ["var(--font-space-grotesk)", "Space Grotesk", "sans-serif"],

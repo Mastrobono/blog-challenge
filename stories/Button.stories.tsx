@@ -74,6 +74,9 @@ export const WithIcon: Story = {
 };
 
 export const AllVariants: Story = {
+  args: {
+    children: "",
+  },
   render: () => (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4">

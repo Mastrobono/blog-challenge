@@ -25,7 +25,7 @@ const meta = {
       control: "boolean",
     },
   },
-} satisfies Meta<typeof Input>;
+} satisfies Meta<typeof InputText>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -98,11 +98,11 @@ export const AllStates: Story = {
     const [value1, setValue1] = useState("");
     return (
       <div className="flex flex-col gap-6 w-[400px]">
-        <InputTextText />
-        <InputTextText label="Label" value={value1} onChange={(e) => setValue1(e.target.value)} />
-        <InputTextText label="Label" defaultValue="Post title" />
-        <InputTextText label="Label" error="Help Text" defaultValue="Post title" />
-        <InputTextText disabled />
+        <InputText />
+        <InputText label="Label" value={value1} onChange={(e) => setValue1(e.target.value)} />
+        <InputText label="Label" defaultValue="Post title" />
+        <InputText label="Label" error="Help Text" defaultValue="Post title" />
+        <InputText disabled />
       </div>
     );
   },
