@@ -58,6 +58,21 @@ export const GreenOutline: Story = {
 };
 
 
+export const WithIcon: Story = {
+  args: {
+    variant: "primary",
+    children: "Button",
+    icon: (
+      <img
+        src="/assets/upload-file.svg"
+        alt="Icon"
+        className="w-5 h-5"
+      />
+    ),
+    iconPosition: "right",
+  },
+};
+
 export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-col gap-4">

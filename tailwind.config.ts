@@ -127,6 +127,7 @@ const config: Config = {
       boxShadow: {
         "hard-black": "10px 10px 0 0 rgba(0, 0, 0, 1)",
         "focus-blur": "0 0 0 4px hsl(275, 47%, 90%)",
+        "input-active": "0px 0px 8px 0px #B97BE6",
       },
       spacing: {
         "modal-width": "400px",

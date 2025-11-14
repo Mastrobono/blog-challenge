@@ -15,6 +15,7 @@
 
   --shadow-hard-black: 10px 10px 0 0 rgba(0, 0, 0, 1);
   --shadow-focus-blur: 0 0 0 4px #B97AE6;
+  --shadow-input-active: 0px 0px 8px 0px #B97BE6;
 
   /* Typography tokens */
   --font-size-h-related: 35px;
