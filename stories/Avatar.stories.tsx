@@ -10,7 +10,8 @@ const meta = {
   tags: ["autodocs"],
   argTypes: {
     size: {
-      control: { type: "range", min: 20, max: 100, step: 5 },
+      control: { type: "select" },
+      options: ["default", "large"],
     },
   },
 } satisfies Meta<typeof Avatar>;
@@ -22,15 +23,7 @@ export const Default: Story = {
   args: {
     src: "https://i.pravatar.cc/150?img=1",
     alt: "User avatar",
-    size: 40,
-  },
-};
-
-export const Small: Story = {
-  args: {
-    src: "https://i.pravatar.cc/150?img=2",
-    alt: "User avatar",
-    size: 30,
+    size: "default",
   },
 };
 
@@ -38,17 +31,7 @@ export const Large: Story = {
   args: {
     src: "https://i.pravatar.cc/150?img=3",
     alt: "User avatar",
-    size: 60,
+    size: "large",
   },
-};
-
-export const Multiple: Story = {
-  render: () => (
-    <div className="flex gap-4 items-center">
-      <Avatar src="https://i.pravatar.cc/150?img=1" alt="User 1" size={40} />
-      <Avatar src="https://i.pravatar.cc/150?img=2" alt="User 2" size={40} />
-      <Avatar src="https://i.pravatar.cc/150?img=3" alt="User 3" size={40} />
-    </div>
-  ),
 };
 

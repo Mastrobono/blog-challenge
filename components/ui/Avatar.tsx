@@ -5,11 +5,11 @@ export interface AvatarProps
   extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   alt: string;
-  size?: number;
+  size?: "default" | "large";
 }
 
 const Avatar = React.forwardRef<HTMLImageElement, AvatarProps>(
-  ({ className, src, alt, size = 40, ...props }, ref) => {
+  ({ className, src, alt, size = "default", ...props }, ref) => {
     return (
       <img
         ref={ref}
@@ -17,12 +17,9 @@ const Avatar = React.forwardRef<HTMLImageElement, AvatarProps>(
         alt={alt}
         className={clsx(
           "rounded-full object-cover",
+          size === "default" ? "w-8 h-8" : "w-10 h-10",
           className
         )}
-        style={{
-          width: `${size}px`,
-          height: `${size}px`,
-        }}
         {...props}
       />
     );

@@ -9,8 +9,9 @@ const meta = {
   },
   tags: ["autodocs"],
   argTypes: {
-    active: {
-      control: "boolean",
+    variant: {
+      control: "select",
+      options: ["default", "active"],
     },
     onRemove: {
       action: "removed",
@@ -23,36 +24,16 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    active: false,
+    variant: "default",
     children: "Technology",
   },
 };
 
 export const Active: Story = {
   args: {
-    active: true,
-    children: "Technology",
-  },
-};
-
-export const ActiveWithRemove: Story = {
-  args: {
-    active: true,
+    variant: "active",
     children: "Technology",
     onRemove: () => console.log("Remove clicked"),
   },
-};
-
-export const Multiple: Story = {
-  render: () => (
-    <div className="flex flex-wrap gap-2">
-      <Chip active={false}>Technology</Chip>
-      <Chip active={true}>Design</Chip>
-      <Chip active={false}>Business</Chip>
-      <Chip active={true} onRemove={() => console.log("Remove")}>
-        Marketing
-      </Chip>
-    </div>
-  ),
 };
 

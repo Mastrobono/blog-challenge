@@ -25,6 +25,7 @@
   --font-size-lg-medium: 18px;
   --font-size-b-modal: 18px;
   --font-size-base-placeholder: 16px;
+  --font-size-base-regular: 16px;
   --font-size-sm-regular: 14px;
   --font-size-sm-semibold: 14px;
   --font-size-xs-label: 12px;
@@ -37,6 +38,7 @@
   --font-weight-lg-medium: 500;
   --font-weight-b-modal: 400;
   --font-weight-base-placeholder: 500;
+  --font-weight-base-regular: 400;
   --font-weight-sm-regular: 400;
   --font-weight-sm-semibold: 600;
   --font-weight-xs-label: 500;
@@ -49,6 +51,7 @@
   --line-height-lg-medium: 1.8;
   --line-height-b-modal: 1.8;
   --line-height-base-placeholder: 1.8;
+  --line-height-base-regular: 1.8;
   --line-height-sm-regular: 1.8;
   --line-height-sm-semibold: 1.8;
   --line-height-xs-label: 1.8;
@@ -118,6 +121,12 @@
     font-size: var(--font-size-base-placeholder);
     font-weight: var(--font-weight-base-placeholder);
     line-height: var(--line-height-base-placeholder);
+  }
+
+  .text-base-regular {
+    font-size: var(--font-size-base-regular);
+    font-weight: var(--font-weight-base-regular);
+    line-height: var(--line-height-base-regular);
   }
 
   .text-sm-regular {

@@ -81,6 +81,13 @@ const config: Config = {
             fontWeight: "500",
           },
         ],
+        "base-regular": [
+          "16px",
+          {
+            lineHeight: "1.8",
+            fontWeight: "400",
+          },
+        ],
         "sm-regular": [
           "14px",
           {
