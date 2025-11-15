@@ -1,4 +1,6 @@
 import type { Preview } from '@storybook/nextjs-vite'
+import React, { useMemo } from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import '../app/globals.css'
 
 const preview: Preview = {
@@ -17,6 +19,32 @@ const preview: Preview = {
       test: 'todo'
     }
   },
+  decorators: [
+    (Story) => {
+      // Create a new QueryClient for each story to avoid state sharing
+      const queryClient = useMemo(
+        () =>
+          new QueryClient({
+            defaultOptions: {
+              queries: {
+                retry: false,
+                staleTime: 0,
+              },
+              mutations: {
+                retry: false,
+              },
+            },
+          }),
+        []
+      );
+
+      return React.createElement(
+        QueryClientProvider,
+        { client: queryClient },
+        React.createElement(Story)
+      );
+    },
+  ],
 };
 
 export default preview;

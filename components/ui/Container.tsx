@@ -1,0 +1,29 @@
+"use client";
+
+import React from "react";
+import { clsx } from "clsx";
+
+export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
+  function Container({ className, children, ...props }, ref) {
+    return (
+      <div
+        ref={ref}
+        className={clsx(
+          "w-full bg-neutral-black",
+          "px-16 pt-[126px] pb-16",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
+);
+
+Container.displayName = "Container";
+
+export default Container;
+

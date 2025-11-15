@@ -162,3 +162,46 @@ NOTE ON FIDELITY: The values used (colors, spacing, typography) are derived dire
 | **Auxiliary Text (Cancel, Retry)** | Typography | `text-base-placeholder` | Should use the same 16px font size. |
 | **Failure Status** | Track Color | `bg-status-fail` | Entire bar track changes to the fail color (`hsl(0, 100%, 91%)`). |
 | **Success Status** | Icon | `checkmark.svg` | Replaces the percentage text/bar entirely upon completion. |
+
+---
+
+## 4. Modal Component Design Decisions (`Modal.tsx`)
+
+The Modal component implements a multi-state workflow for post creation with comprehensive error handling and user feedback. Below are the key design decisions made during implementation:
+
+
+### 4.2 Error Handling Strategy
+
+**Decision:** Implemented a two-tier error handling approach:
+- **Client-side image upload errors:** Handled with retry/cancel functionality via `LoaderBar` component
+- **Server-side API submission errors:** Handled with an `errorMessage` state for displaying server failures
+
+**Implementation Details:**
+- When a file upload fails locally (e.g., invalid file type, network interruption during upload), the `LoaderBar` displays a "Retry" button that resets the upload state and returns to the file selection interface
+- If the form submission to the API fails, an `errorMessage` prop/state can be used to display server-side errors in the UI (currently prepared but not fully implemented as per requirements that assume submission always succeeds)
+
+**Rationale:** This separation allows for different recovery strategies: local upload errors can be retried immediately, while server errors require different handling and user communication.
+
+### 4.3 LoaderBar Enhancement: "Change" Button
+
+**Decision:** Added a "Change" button to the `LoaderBar` component that appears when an image has been successfully uploaded.
+
+**Implementation:** Extended `LoaderBar` with an `onChange` prop that triggers when the user wants to replace an already-uploaded file. This button resets the upload state and returns to the file selection interface, allowing users to select a different file or re-select the same file.
+
+**Rationale:** Provides users with flexibility to change their file selection after successful upload without requiring them to cancel the entire form submission process.
+
+### 4.4 Confirm Button State Management
+
+**Decision:** The Confirm button is disabled when the `LoaderBar` is in "failure" (retry) state.
+
+**Implementation:** Added `localUploadStatus === "failure"` to the button's disabled condition, preventing form submission while the user is in a retry state.
+
+**Rationale:** Ensures users resolve image upload issues before proceeding with form submission, maintaining data integrity and preventing partial submissions.
+
+### 4.5 Input File Help Text Consistency
+
+**Decision:** Added help text support to `InputFile` component to maintain consistency with `InputText` component's error communication pattern.
+
+**Implementation:** Wrapped `InputFile` and its error message in a flex container with consistent spacing (`mt-1`), matching the `InputText` component's help text positioning and styling.
+
+**Rationale:** Consistent error messaging patterns improve usability by providing predictable feedback locations and maintaining visual harmony across form elements.

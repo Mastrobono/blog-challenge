@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Footer from "../components/features/Footer";
+import Footer from "../components/layout/Footer";
 
 const meta = {
-  title: "Features/Footer",
+  title: "Layout/Footer",
   component: Footer,
   parameters: {
     layout: "fullscreen",

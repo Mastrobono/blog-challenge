@@ -6,6 +6,7 @@ export interface LoaderBarProps extends React.HTMLAttributes<HTMLDivElement> {
   status?: "loading" | "success" | "failure";
   onCancel?: () => void;
   onRetry?: () => void;
+  onChange?: () => void; // For success state - allows changing/replacing the file
 }
 
 const LoaderBar = React.forwardRef<HTMLDivElement, LoaderBarProps>(
@@ -16,6 +17,7 @@ const LoaderBar = React.forwardRef<HTMLDivElement, LoaderBarProps>(
       status = "loading",
       onCancel,
       onRetry,
+      onChange,
       ...props
     },
     ref
@@ -91,6 +93,15 @@ const LoaderBar = React.forwardRef<HTMLDivElement, LoaderBarProps>(
               className="text-base-semibold text-neutral-black hover:text-neutral-dark-gray cursor-pointer"
                   >
                     Retry
+                  </button>
+                )}
+                {status === "success" && onChange && (
+                  <button
+                    type="button"
+                    onClick={onChange}
+              className="text-base-semibold text-neutral-black hover:text-neutral-dark-gray cursor-pointer"
+                  >
+                    Change
                   </button>
                 )}
               </div>

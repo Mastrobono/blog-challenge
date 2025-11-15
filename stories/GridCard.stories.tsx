@@ -9,9 +9,14 @@ const meta = {
   },
   tags: ["autodocs"],
   argTypes: {
-    mainCard: {
-      control: "object",
-      description: "Object with position and index. If null, all 3 cards will have the same size.",
+    mainCardPosition: {
+      control: "select",
+      options: ["left", "right"],
+      description: "Position of the main card (only used when cards.length === 3 and equalSize is false).",
+    },
+    equalSize: {
+      control: "boolean",
+      description: "If true, render 3 cards with equal size (only used when cards.length === 3).",
     },
   },
 } satisfies Meta<typeof GridCard>;
@@ -58,7 +63,7 @@ const sampleCards = [
 export const MainCardLeft: Story = {
   args: {
     cards: sampleCards,
-    mainCard: { position: "left", index: 0 },
+    mainCardPosition: "left",
   },
   render: (args) => (
     <div className="w-full max-w-6xl md:h-[800px] flex flex-col">
@@ -72,7 +77,7 @@ export const MainCardLeft: Story = {
 export const MainCardRight: Story = {
   args: {
     cards: sampleCards,
-    mainCard: { position: "right", index: 0 },
+    mainCardPosition: "right",
   },
   render: (args) => (
     <div className="w-full max-w-6xl md:h-[800px] flex flex-col">
@@ -86,7 +91,7 @@ export const MainCardRight: Story = {
 export const DarkVariant: Story = {
   args: {
     cards: sampleCards.map((card) => ({ ...card, variant: "dark" as const })),
-    mainCard: { position: "left", index: 0 },
+    mainCardPosition: "left",
   },
   render: (args) => (
     <div className="w-full max-w-6xl bg-neutral-black p-8 md:h-[800px] flex flex-col">
@@ -97,38 +102,36 @@ export const DarkVariant: Story = {
   ),
 };
 
-export const MainCardIndex1: Story = {
-  args: {
-    cards: sampleCards,
-    mainCard: { position: "left", index: 1 }, // Second card will be full height
-  },
-  render: (args) => (
-    <div className="w-full max-w-6xl md:h-[800px] flex flex-col">
-      <div className="h-full flex-1">
-        <GridCard {...args} />
-      </div>
-    </div>
-  ),
-};
-
-export const MainCardIndex2Right: Story = {
-  args: {
-    cards: sampleCards,
-    mainCard: { position: "right", index: 2 }, // Third card will be full height on the right
-  },
-  render: (args) => (
-    <div className="w-full max-w-6xl md:h-[800px] flex flex-col">
-      <div className="h-full flex-1">
-        <GridCard {...args} />
-      </div>
-    </div>
-  ),
-};
-
 export const EqualSize: Story = {
   args: {
     cards: sampleCards,
-    mainCard: null, // All 3 cards will have the same size
+    equalSize: true, // All 3 cards will have the same size
+  },
+  render: (args) => (
+    <div className="w-full max-w-6xl md:h-[800px] flex flex-col">
+      <div className="h-full flex-1">
+        <GridCard {...args} />
+      </div>
+    </div>
+  ),
+};
+
+export const SingleCard: Story = {
+  args: {
+    cards: [sampleCards[0]], // Only first card
+  },
+  render: (args) => (
+    <div className="w-full max-w-6xl md:h-[600px] flex flex-col">
+      <div className="h-full flex-1">
+        <GridCard {...args} />
+      </div>
+    </div>
+  ),
+};
+
+export const TwoCards: Story = {
+  args: {
+    cards: sampleCards.slice(0, 2), // First 2 cards
   },
   render: (args) => (
     <div className="w-full max-w-6xl md:h-[600px] flex flex-col">

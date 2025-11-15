@@ -6,6 +6,7 @@ import { clsx } from "clsx";
 export interface InputFileProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type" | "onChange"> {
   onFileChange?: (files: FileList | null) => void;
+  error?: string | boolean;
 }
 
 const InputFile = React.forwardRef<HTMLInputElement, InputFileProps>(
@@ -15,6 +16,7 @@ const InputFile = React.forwardRef<HTMLInputElement, InputFileProps>(
       accept,
       multiple = false,
       disabled = false,
+      error,
       className,
       onChange,
       ...props
@@ -86,14 +88,16 @@ const InputFile = React.forwardRef<HTMLInputElement, InputFileProps>(
           className={clsx(
             "w-full min-w-max px-8 py-4 h-[56px]",
             "inline-flex items-center justify-center gap-[10px]",
-            "border-2 border-neutral-black",
+            "border-2",
             "bg-primary-lime text-neutral-black",
             "text-lg-medium",
             "cursor-pointer",
-            "focus:outline-none focus:border-neutral-black",
+            "focus:outline-none",
             "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-disabled-bg disabled:text-neutral-gray-light disabled:border-neutral-gray-light",
             {
               "!bg-primary-lime/80": isActive && !disabled,
+              "border-status-fail": error,
+              "border-neutral-black focus:border-neutral-black": !error,
             },
             className
           )}
