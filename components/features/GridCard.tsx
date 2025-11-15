@@ -4,28 +4,53 @@ import React from "react";
 import { clsx } from "clsx";
 import Card, { CardProps } from "./Card";
 
-export interface CardGridProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface GridCardProps extends React.HTMLAttributes<HTMLDivElement> {
   cards: CardProps[];
-  mainCardPosition?: "left" | "right";
-  mainCardIndex?: number; // Index of the card that will be full height (0-2), defaults to 0
+  mainCard?: {
+    position: "left" | "right";
+    index: number; // Index of the card that will be full height (0-2)
+  } | null; // If null, all 3 cards will have the same size (3 columns with 32px gap)
 }
 
-const CardGrid = React.forwardRef<HTMLDivElement, CardGridProps>(
-  function CardGrid(
-    { className, cards, mainCardPosition = "left", mainCardIndex = 0, ...props },
+const GridCard = React.forwardRef<HTMLDivElement, GridCardProps>(
+  function GridCard(
+    { className, cards, mainCard = { position: "left", index: 0 }, ...props },
     ref
   ) {
     if (cards.length !== 3) {
-      console.warn("CardGrid expects exactly 3 cards");
+      console.warn("GridCard expects exactly 3 cards");
       return null;
     }
 
+    // Equal size mode: 3 columns with 32px gap (when mainCard is null)
+    if (mainCard === null) {
+      return (
+        <div
+          ref={ref}
+          className={clsx(
+            className,
+            "flex flex-col gap-4",
+            "md:grid md:grid-cols-3 md:gap-8 md:items-stretch md:h-full md:min-h-0"
+          )}
+          {...props}
+        >
+          {cards.map((card, index) => (
+            <div key={index} className="flex h-full md:min-h-full">
+              <Card {...card} />
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    let { position: mainCardPosition, index: mainCardIndex } = mainCard;
+
     if (mainCardIndex < 0 || mainCardIndex > 2) {
-      console.warn("mainCardIndex must be between 0 and 2, defaulting to 0");
+      console.warn("mainCard.index must be between 0 and 2, defaulting to 0");
       mainCardIndex = 0;
     }
 
-    const mainCard = cards[mainCardIndex];
+    const mainCardData = cards[mainCardIndex];
     const secondaryCards = cards.filter((_, index) => index !== mainCardIndex);
 
     return (
@@ -49,7 +74,7 @@ const CardGrid = React.forwardRef<HTMLDivElement, CardGridProps>(
                 "md:row-start-1": true,
               })}
             >
-              <Card {...mainCard} />
+              <Card {...mainCardData} />
             </div>
             {/* Secondary Cards - Right (appear after main in mobile, right column in desktop) */}
             {secondaryCards.map((card, index) => (
@@ -93,7 +118,7 @@ const CardGrid = React.forwardRef<HTMLDivElement, CardGridProps>(
                 "md:row-start-1": true,
               })}
             >
-              <Card {...mainCard} />
+              <Card {...mainCardData} />
             </div>
           </>
         )}
@@ -102,7 +127,7 @@ const CardGrid = React.forwardRef<HTMLDivElement, CardGridProps>(
   }
 );
 
-CardGrid.displayName = "CardGrid";
+GridCard.displayName = "GridCard";
 
-export default CardGrid;
+export default GridCard;
 

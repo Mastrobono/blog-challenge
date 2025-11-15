@@ -6,6 +6,7 @@ export { default as Badge } from "./Badge";
 export { default as Avatar } from "./Avatar";
 export { default as LoaderBar } from "./LoaderBar";
 export { default as ActionButton } from "./ActionButton";
+export { default as SocialMedia } from "./SocialMedia";
 
 export type { ButtonProps } from "./Button";
 export type { InputTextProps } from "./InputText";
@@ -15,4 +16,5 @@ export type { BadgeProps } from "./Badge";
 export type { AvatarProps } from "./Avatar";
 export type { LoaderBarProps } from "./LoaderBar";
 export type { ActionButtonProps } from "./ActionButton";
+export type { SocialMediaProps } from "./SocialMedia";
 
