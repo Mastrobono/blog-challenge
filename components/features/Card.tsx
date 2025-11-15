@@ -54,7 +54,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ref={ref}
         className={clsx(
           "relative flex flex-col",
-          "w-full h-full",
+          "w-full h-full flex-1 min-h-[378px]",
           "overflow-hidden",
           "p-[10px]",
           {
@@ -66,11 +66,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         {...props}
       >
         {/* Background Image */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 ">
           <img
             src={imageSrc}
             alt={imageAlt}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover  md:min-h-0"
           />
         </div>
 
