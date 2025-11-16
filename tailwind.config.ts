@@ -162,6 +162,7 @@ const config: Config = {
       spacing: {
         "modal-width": "400px",
         "modal-max-width": "640px",
+        "navbar-height": "80px",
       },
       borderRadius: {
         chip: "56px",

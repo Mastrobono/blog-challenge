@@ -6,21 +6,22 @@ import FilterChips from "./FilterChips";
 import GridCard from "./GridCard";
 import CTA from "./CTA";
 import Button from "../ui/Button";
-import Container from "../ui/Container";
 import { useFilters } from "@/contexts/FilterContext";
-import { usePosts, transformPostsToCards, extractUniqueTopics } from "@/hooks/usePosts";
+import { transformPostsToCards, extractUniqueTopics } from "@/lib/posts";
 import { CardProps } from "./Card";
 import { ApiPost } from "@/services/api";
 
 
 export interface FilteredPostsProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
-  apiEndpoint?: string;
+  posts: ApiPost[]; // Posts fetched from Server Component
+  initialTopics?: { id: string; label: string }[]; // Optional initial topics (extracted from posts if not provided)
+  hideFilterChips?: boolean; // Hide FilterChips if rendering separately
 }
 
 const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
   function FilteredPosts(
-    { className, title = "Topics", apiEndpoint, ...props },
+    { className, title = "Topics", posts, initialTopics, hideFilterChips = false, ...props },
     ref
   ) {
     const { activeFilters, toggleFilter, chips, updateChips } = useFilters();
@@ -32,44 +33,15 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
       [activeFilters]
     );
 
-    // Debug logs
+    // Extract unique topics from posts (once, when posts are loaded and no initial topics provided)
     useEffect(() => {
-      console.log("🔍 FilteredPosts Debug:", {
-        activeFilters,
-        queryFilters,
-        chips: chips.length,
-        chipsData: chips,
-      });
-    }, [activeFilters, queryFilters, chips]);
-
-    // Fetch ALL posts (no filters) - we'll filter client-side
-    const {
-      data,
-      isLoading,
-      isError,
-      error,
-    } = usePosts([], 100, chips); // Fetch up to 100 posts initially
-
-    // Extract all API posts from all pages (always, since we fetch all posts)
-    const allApiPosts: ApiPost[] = useMemo(() => {
-      if (!data?.pages) return [];
-      return data.pages.flatMap((page) => page.data);
-    }, [data]);
-
-    // Extract unique topics from all posts (once, when posts are loaded)
-    useEffect(() => {
-      // Only extract topics if:
-      // 1. We haven't extracted them yet (ref check)
-      // 2. We have posts loaded (allApiPosts.length > 0)
-      // 3. Chips haven't been initialized yet (chips.length === 0)
-      // 4. Loading is complete (!isLoading)
       if (
         !topicsExtractedRef.current &&
-        allApiPosts.length > 0 &&
+        posts.length > 0 &&
         chips.length === 0 &&
-        !isLoading
+        !initialTopics
       ) {
-        const uniqueTopics = extractUniqueTopics(allApiPosts);
+        const uniqueTopics = extractUniqueTopics(posts);
         if (uniqueTopics.length > 0 && updateChips) {
           const topicChips = uniqueTopics.map((topic) => ({
             id: topic.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "and"),
@@ -79,23 +51,20 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
           topicsExtractedRef.current = true;
         }
       }
-    }, [allApiPosts, updateChips, chips.length, isLoading]);
+    }, [posts, updateChips, chips.length, initialTopics]);
 
-    // Flatten all pages into a single array of CardProps
-    const allPosts: CardProps[] = useMemo(() => {
-      if (!data?.pages) {
-        console.log("📭 No data pages");
-        return [];
+    // Initialize chips from initialTopics if provided
+    useEffect(() => {
+      if (initialTopics && initialTopics.length > 0 && chips.length === 0 && updateChips) {
+        updateChips(initialTopics);
       }
-      const posts = data.pages.flatMap((page) => transformPostsToCards(page.data));
-      console.log("📦 All posts:", {
-        pagesCount: data.pages.length,
-        postsPerPage: data.pages.map((p) => p.data.length),
-        totalPosts: posts.length,
-        posts: posts.map((p) => ({ title: p.postTitle, badge: p.badge })),
-      });
-      return posts;
-    }, [data]);
+    }, [initialTopics, chips.length, updateChips]);
+
+    // Transform API posts to CardProps
+    // Cards now use Link for navigation, so no need to pass onReadClick
+    const allPosts: CardProps[] = useMemo(() => {
+      return transformPostsToCards(posts);
+    }, [posts]);
 
     // Filter posts client-side based on active filters
     const filteredPosts = useMemo(() => {
@@ -120,9 +89,10 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
     const [displayedCount, setDisplayedCount] = useState(9);
     
     // Reset displayed count when filters change
+    const queryFiltersKey = useMemo(() => queryFilters.join(","), [queryFilters]);
     useEffect(() => {
       setDisplayedCount(9);
-    }, [queryFilters]);
+    }, [queryFiltersKey]);
     
     const displayedPosts = filteredPosts.slice(0, displayedCount);
     const hasMore = filteredPosts.length > displayedCount;
@@ -161,33 +131,19 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
     );
 
     return (
-      <Container ref={ref} className={clsx("flex flex-col gap-10", className)} {...props}>
+      <div ref={ref} className={clsx("flex flex-col gap-10", className)} {...props}>
         {/* Filter Chips */}
-        <FilterChips
-          title={title}
-          chips={chips}
-          activeChips={activeFilters}
-          onChipToggle={toggleFilter}
-        />
-
-        {/* Loading State */}
-        {isLoading && (
-          <div className="text-center py-8">
-            <p className="text-lg-medium text-white">Loading posts...</p>
-          </div>
-        )}
-
-        {/* Error State */}
-        {isError && (
-          <div className="text-center py-8">
-            <p className="text-lg-medium text-status-fail">
-              Error loading posts: {error instanceof Error ? error.message : "Unknown error"}
-            </p>
-          </div>
+        {!hideFilterChips && (
+          <FilterChips
+            title={title}
+            chips={chips}
+            activeChips={activeFilters}
+            onChipToggle={toggleFilter}
+          />
         )}
 
         {/* Posts Grid */}
-        {!isLoading && gridCardSets.length > 0 && (
+        {gridCardSets.length > 0 && (
           <div className="flex flex-col gap-10">
             {gridCardSets.map((cardSet, index) => {
               const position = getMainCardPosition(index);
@@ -207,7 +163,7 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
         )}
 
         {/* Load More Button */}
-        {!isLoading && gridCardSets.length > 0 && hasMore && (
+        {gridCardSets.length > 0 && hasMore && (
           <div className="flex justify-center pt-4">
             <Button
               variant="primary"
@@ -220,12 +176,12 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
         )}
 
         {/* Empty State */}
-        {!isLoading && gridCardSets.length === 0 && (
+        {gridCardSets.length === 0 && (
           <div className="text-center py-8">
             <p className="text-lg-medium text-white">No posts found.</p>
           </div>
         )}
-      </Container>
+      </div>
     );
   }
 );

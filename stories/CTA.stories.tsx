@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import CTA from "../components/features/CTA";
+import Container from "../components/ui/Container";
 
 const meta = {
   title: "Features/CTA",
@@ -38,6 +39,10 @@ export const Default: Story = {
     buttonText: "Subscribe",
     onSubscribe: () => console.log("Subscribe clicked"),
   },
-  render: (args) => <CTA {...args} />,
+  render: (args) => (
+    <Container>
+      <CTA {...args} />
+    </Container>
+  ),
 };
 

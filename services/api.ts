@@ -43,13 +43,14 @@ export interface FetchPostsParams {
   page?: number;
   pageSize?: number;
   topics?: string[]; // Changed to support multiple topics
+  sort?: string; // Strapi sort parameter (e.g., "publishedAt:desc" or "createdAt:desc")
 }
 
 /**
  * Fetch posts from the API
  */
 export async function fetchPosts(params: FetchPostsParams = {}): Promise<ApiPostsResponse> {
-  const { page = 0, pageSize = 9, topics = [] } = params;
+  const { page = 0, pageSize = 9, topics = [], sort } = params;
   
   // Build query params using Strapi format
   const queryParams = new URLSearchParams({
@@ -60,6 +61,11 @@ export async function fetchPosts(params: FetchPostsParams = {}): Promise<ApiPost
 
   // Add populate to get coverImg data
   queryParams.append("populate", "coverImg");
+
+  // Add sorting if provided (e.g., "publishedAt:desc" for most recent)
+  if (sort) {
+    queryParams.append("sort", sort);
+  }
 
   // Add topic filters if provided
   if (topics.length > 0) {
@@ -97,15 +103,20 @@ export async function fetchPosts(params: FetchPostsParams = {}): Promise<ApiPost
  * Fetch a single post by ID
  */
 export async function fetchPostById(id: number): Promise<{ data: ApiPost; meta: {} }> {
-  const queryParams = new URLSearchParams({
-    populate: "coverImg",
-  });
+  // Use Strapi format for populate
+  const queryParams = new URLSearchParams();
+  queryParams.append("populate", "coverImg");
   
-  const response = await fetch(`${API_BASE_URL}/api/posts/${id}?${queryParams.toString()}`);
+  const url = `${API_BASE_URL}/api/posts/${id}?${queryParams.toString()}`;
+  
+  const response = await fetch(url, {
+    cache: "no-store", // Ensure fresh data
+  });
   
   if (!response.ok) {
     const errorText = await response.text();
     console.error("API Error:", response.status, errorText);
+    console.error("Request URL:", url);
     throw new Error(`Failed to fetch post: ${response.status} ${response.statusText}`);
   }
 

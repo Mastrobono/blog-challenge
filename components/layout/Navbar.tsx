@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { clsx } from "clsx";
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLNavElement> {
@@ -20,24 +21,26 @@ const Navbar = React.forwardRef<HTMLNavElement, NavbarProps>(
           "py-4 px-6",
           // Desktop padding: 26px top/bottom, 64px left/right
           "md:py-[26px] md:px-16",
+          // Minimum height using navbar-height token (80px) for consistency
+          "min-h-[80px]",
           // Background: #000 at 80% opacity with backdrop blur
           "backdrop-blur-[8px]",
           className
         )}
         style={{
-          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          backgroundColor: "rgba(0, 0, 0, 0.8)", // Using neutral-black with 80% opacity
           ...style,
         }}
         {...props}
       >
         {/* Logo */}
-        <div className="flex items-center">
+        <Link href="/" className="flex items-center">
           <img
             src="/assets/logo.svg"
             alt="Lite-Tech"
             className="h-auto"
           />
-        </div>
+        </Link>
 
         {/* Button */}
         {buttonClick && (

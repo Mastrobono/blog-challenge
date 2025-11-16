@@ -80,71 +80,71 @@ const GridCard = React.forwardRef<HTMLDivElement, GridCardProps>(
     return (
       <div ref={ref} className={clsx("flex flex-col gap-10", className)} {...props}>
         <div className="w-full md:min-h-[600px]">
-          <div
-            className={clsx(
-              "flex flex-col gap-4",
+      <div
+        className={clsx(
+          "flex flex-col gap-4",
               "md:grid md:grid-cols-2 md:grid-rows-2 md:items-stretch md:gap-4 md:h-full md:min-h-0"
-            )}
-          >
+        )}
+      >
             {currentMainCardPosition === "left" ? (
-              <>
+          <>
                 {/* Main Card - Left */}
-                <div
-                  className={clsx("flex h-full md:min-h-full", {
-                    "md:row-span-2": true,
-                    "md:col-span-1": true,
-                    "md:col-start-1": true,
-                    "md:row-start-1": true,
-                  })}
-                >
+            <div
+              className={clsx("flex h-full md:min-h-full", {
+                "md:row-span-2": true,
+                "md:col-span-1": true,
+                "md:col-start-1": true,
+                "md:row-start-1": true,
+              })}
+            >
                   <Card {...mainCardData} />
-                </div>
+            </div>
                 {/* Secondary Cards - Right */}
-                {secondaryCards.map((card, index) => (
-                  <div
-                    key={index}
-                    className={clsx("flex h-full md:min-h-full", {
-                      "md:row-span-1": true,
-                      "md:col-span-1": true,
-                      "md:col-start-2": true,
-                      "md:row-start-1": index === 0,
-                      "md:row-start-2": index === 1,
-                    })}
-                  >
-                    <Card {...card} />
-                  </div>
-                ))}
-              </>
-            ) : (
-              <>
+            {secondaryCards.map((card, index) => (
+              <div
+                key={index}
+                className={clsx("flex h-full md:min-h-full", {
+                  "md:row-span-1": true,
+                  "md:col-span-1": true,
+                  "md:col-start-2": true,
+                  "md:row-start-1": index === 0,
+                  "md:row-start-2": index === 1,
+                })}
+              >
+                <Card {...card} />
+              </div>
+            ))}
+          </>
+        ) : (
+          <>
                 {/* Secondary Cards - Left */}
-                {secondaryCards.map((card, index) => (
-                  <div
-                    key={index}
-                    className={clsx("flex h-full md:min-h-full", {
-                      "md:row-span-1": true,
-                      "md:col-span-1": true,
-                      "md:col-start-1": true,
-                      "md:row-start-1": index === 0,
-                      "md:row-start-2": index === 1,
-                    })}
-                  >
-                    <Card {...card} />
-                  </div>
-                ))}
+            {secondaryCards.map((card, index) => (
+              <div
+                key={index}
+                className={clsx("flex h-full md:min-h-full", {
+                  "md:row-span-1": true,
+                  "md:col-span-1": true,
+                  "md:col-start-1": true,
+                  "md:row-start-1": index === 0,
+                  "md:row-start-2": index === 1,
+                })}
+              >
+                <Card {...card} />
+              </div>
+            ))}
                 {/* Main Card - Right */}
-                <div
-                  className={clsx("flex h-full md:min-h-full", {
-                    "md:row-span-2": true,
-                    "md:col-span-1": true,
-                    "md:col-start-2": true,
-                    "md:row-start-1": true,
-                  })}
-                >
+            <div
+              className={clsx("flex h-full md:min-h-full", {
+                "md:row-span-2": true,
+                "md:col-span-1": true,
+                "md:col-start-2": true,
+                "md:row-start-1": true,
+              })}
+            >
                   <Card {...mainCardData} />
-                </div>
-              </>
-            )}
+            </div>
+          </>
+        )}
           </div>
         </div>
         {cta && <div>{cta}</div>}

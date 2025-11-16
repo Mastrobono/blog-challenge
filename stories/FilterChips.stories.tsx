@@ -1,22 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import FilterChips from "../components/features/FilterChips";
 import { FilterProvider } from "../contexts/FilterContext";
+import Container from "../components/ui/Container";
 import React, { useState } from "react";
 
 const meta = {
   title: "Features/FilterChips",
   component: FilterChips,
   parameters: {
-    layout: "padded",
-    backgrounds: {
-      default: "dark",
-      values: [
-        {
-          name: "dark",
-          value: "#000000",
-        },
-      ],
-    },
+    layout: "fullscreen",
   },
   tags: ["autodocs"],
   argTypes: {
@@ -59,7 +51,7 @@ const meta = {
       };
 
       return (
-        <div style={{ backgroundColor: "#000000", padding: "20px" }}>
+        <Container>
           <Story
             args={{
               ...context.args,
@@ -67,7 +59,7 @@ const meta = {
               onChipToggle: handleToggle,
             }}
           />
-        </div>
+        </Container>
       );
     },
   ],

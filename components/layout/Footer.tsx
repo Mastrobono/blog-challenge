@@ -12,7 +12,7 @@ const Footer = React.forwardRef<HTMLDivElement, FooterProps>(
       <div
         ref={ref}
         className={clsx(
-          "w-full bg-[#9C73F7] px-16 py-[66px]",
+          "w-full bg-arrow-purple px-16 py-[66px] mt-[238px]",
           "flex flex-col items-center gap-[56px]",
           "md:items-start md:gap-[40px]",
           className
@@ -31,22 +31,12 @@ const Footer = React.forwardRef<HTMLDivElement, FooterProps>(
           </div>
 
           {/* Social Media */}
-          <SocialMedia variant="light" size="default" />
+          <SocialMedia variant="dark" size="default" />
         </div>
 
         {/* Second Row: Copyright */}
         <div className="flex flex-col items-center md:items-start">
-          <p
-            className="text-white text-center md:text-left"
-            style={{
-              fontFamily: "Space Grotesk",
-              fontWeight: 400,
-              fontStyle: "normal",
-              fontSize: "14px",
-              lineHeight: "180%",
-              letterSpacing: "0px",
-            }}
-          >
+          <p className="text-white text-center md:text-left font-sans text-sm-regular">
             <span className="md:inline">
               © Copyright Lite-Tech.
             </span>

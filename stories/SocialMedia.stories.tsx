@@ -19,6 +19,10 @@ const meta = {
       options: ["default", "large"],
       description: "Size variant - controls gap between icons (default: 24px, large: 32px)",
     },
+    showLabel: {
+      control: "boolean",
+      description: "Show 'Share on' label above icons",
+    },
   },
 } satisfies Meta<typeof SocialMedia>;
 
@@ -65,6 +69,19 @@ export const DarkVariantLarge: Story = {
   args: {
     variant: "dark",
     size: "large",
+  },
+  render: (args) => (
+    <div className="p-8 bg-neutral-white">
+      <SocialMedia {...args} />
+    </div>
+  ),
+};
+
+export const WithLabel: Story = {
+  args: {
+    variant: "light",
+    size: "default",
+    showLabel: true,
   },
   render: (args) => (
     <div className="p-8 bg-neutral-white">

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import Card from "../components/features/Card";
+import Container from "../components/ui/Container";
 
 const meta = {
   title: "Features/Card",
@@ -25,7 +26,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Light: Story = {
   args: {
-    imageSrc: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800",
+    imageSrc: "/assets/hero-placeholder.png",
     imageAlt: "Security operation",
     postTitle: "A Global Police Operation Just Took Down the Notorious LockBit",
     slug: "lockbit-operation",
@@ -36,15 +37,17 @@ export const Light: Story = {
     onReadClick: (slug) => console.log("Read clicked:", slug),
   },
   render: (args) => (
-    <div className="w-[400px] h-[500px]">
-      <Card {...args} />
-    </div>
+    <Container>
+      <div className="w-full md:w-[400px] h-[500px]">
+        <Card {...args} />
+      </div>
+    </Container>
   ),
 };
 
 export const Dark: Story = {
   args: {
-    imageSrc: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800",
+    imageSrc: "/assets/hero-placeholder.png",
     imageAlt: "Security operation",
     postTitle: "A Global Police Operation Just Took Down the Notorious LockBit",
     slug: "lockbit-operation",
@@ -55,15 +58,17 @@ export const Dark: Story = {
     onReadClick: (slug) => console.log("Read clicked:", slug),
   },
   render: (args) => (
-    <div className="w-[400px] h-[500px]">
-      <Card {...args} />
-    </div>
+    <Container>
+      <div className="w-full md:w-[400px] h-[500px]">
+        <Card {...args} />
+      </div>
+    </Container>
   ),
 };
 
 export const WithAvatar: Story = {
   args: {
-    imageSrc: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800",
+    imageSrc: "/assets/hero-placeholder.png",
     imageAlt: "Tech article",
     postTitle: "The first rule of the extreme dishwasher loading facebook group is...",
     slug: "dishwasher-group",
@@ -78,15 +83,17 @@ export const WithAvatar: Story = {
     onReadClick: (slug) => console.log("Read clicked:", slug),
   },
   render: (args) => (
-    <div className="w-[400px] h-[500px]">
-      <Card {...args} />
-    </div>
+    <Container>
+      <div className="w-full md:w-[400px] h-[500px]">
+        <Card {...args} />
+      </div>
+    </Container>
   ),
 };
 
 export const LargeTitle: Story = {
   args: {
-    imageSrc: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800",
+    imageSrc: "/assets/hero-placeholder.png",
     imageAlt: "Hero article",
     postTitle: "A Global Police Operation Just Took Down the Notorious LockBit",
     slug: "lockbit-operation",
@@ -97,9 +104,11 @@ export const LargeTitle: Story = {
     onReadClick: (slug) => console.log("Read clicked:", slug),
   },
   render: (args) => (
-    <div className="w-[400px] h-[500px]">
-      <Card {...args} />
-    </div>
+    <Container>
+      <div className="w-full md:w-[400px] h-[500px]">
+        <Card {...args} />
+      </div>
+    </Container>
   ),
 };
 

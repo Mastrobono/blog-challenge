@@ -5,6 +5,14 @@ const config: StorybookConfig = {
     "../stories/**/*.mdx",
     "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
+  typescript: {
+    check: false,
+    reactDocgen: "react-docgen-typescript",
+    reactDocgenTypescriptOptions: {
+      shouldExtractLiteralValuesFromEnum: true,
+      propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
+    },
+  },
   "addons": [
     "@chromatic-com/storybook",
     "@storybook/addon-docs",
@@ -26,8 +34,9 @@ const config: StorybookConfig = {
       ...config.define,
       "process.env.NODE_ENV": JSON.stringify("development"),
       "import.meta.env.MODE": JSON.stringify("development"),
-      "import.meta.env.DEV": true,
-      "import.meta.env.PROD": false,
+      "import.meta.env.DEV": JSON.stringify("true"),
+      "import.meta.env.PROD": JSON.stringify("false"),
+      "__DEV__": JSON.stringify("true"),
     };
     
     // Ensure React is optimized for development

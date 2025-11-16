@@ -13,9 +13,13 @@ export interface ActionButtonProps extends React.ButtonHTMLAttributes<HTMLButton
 const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
   ({ className, children = "Read", variant = "light", arrowColor, onClick, ...props }, ref) => {
     // Determine arrow color based on variant if not explicitly provided
+    // Using token values from CSS variables
     const getArrowColor = () => {
       if (arrowColor) return arrowColor;
-      return variant === "dark" ? "#D8F34E" : "#9C73F7"; // primary-lime for dark, arrow-purple for light
+      // Using token values: primary-lime (#D8F34E) for dark, arrow-purple (#9C73F7) for light
+      return variant === "dark" 
+        ? "var(--color-primary-lime)" 
+        : "var(--color-arrow-purple)";
     };
 
     const arrowColorValue = getArrowColor();

@@ -205,3 +205,47 @@ The Modal component implements a multi-state workflow for post creation with com
 **Implementation:** Wrapped `InputFile` and its error message in a flex container with consistent spacing (`mt-1`), matching the `InputText` component's help text positioning and styling.
 
 **Rationale:** Consistent error messaging patterns improve usability by providing predictable feedback locations and maintaining visual harmony across form elements.
+
+### 4.6 Most Viewed Posts Mocking Strategy
+
+**Decision:** Since the API doesn't provide view counts or popularity metrics, we're using the 4 oldest posts (sorted by `publishedAt:asc`) as a mock for "most viewed" posts.
+
+**Implementation:** The `getMostViewedPosts()` function in `lib/posts.ts` fetches posts sorted by `publishedAt:asc` (oldest first) and limits results to 4 posts. This is used in Server Components and passed as props to the `MostViewedPosts` component.
+
+**Rationale:** This provides a consistent way to display "most viewed" content while the API doesn't support view tracking. When view counts become available in the API, this can be easily updated to use the actual view count field for sorting.
+
+### 4.7 Static Site Generation (SSG) Strategy
+
+**Decision:** All post detail pages (`/post/[postId]`) are generated at build time using Next.js App Router's `generateStaticParams` function.
+
+**Implementation:** 
+- The `generateStaticParams` function in `app/post/[postId]/page.tsx` fetches all posts (up to 1000) during build time
+- Each post ID is converted to a static route parameter
+- All post pages are pre-rendered as static HTML during the build process
+- This ensures fast page loads and better SEO
+
+**Code Location:** `app/post/[postId]/page.tsx`
+
+```typescript
+export async function generateStaticParams() {
+  const allPosts = await getAllPosts(1000);
+  return allPosts.map((post) => ({
+    postId: post.id.toString(),
+  }));
+}
+```
+
+**Benefits:**
+- **Performance:** Static pages load instantly without server-side rendering
+- **SEO:** Search engines can crawl all post pages immediately
+- **Cost:** Reduces server load by serving pre-rendered HTML
+- **Scalability:** Can handle high traffic without additional server resources
+
+**Trade-offs:**
+- Build time increases with the number of posts
+- New posts require a rebuild to be accessible (unless using ISR with `revalidate`)
+- If you have thousands of posts, consider limiting the initial generation and using ISR for the rest
+
+**Future Considerations:**
+- If posts are added frequently, consider implementing ISR with `revalidate` to regenerate pages periodically
+- For very large datasets, consider generating only the most popular posts statically and using SSR for the rest

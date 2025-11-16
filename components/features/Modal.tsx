@@ -323,23 +323,11 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           <div className="w-full md:max-w-[480px] flex flex-col items-center gap-6">
             {/* Headline */}
             {!isSuccess ? (
-              <h2
-                className="text-h-modal text-center font-sans"
-                style={{
-                  color: "#240F35",
-                  lineHeight: "120%",
-                }}
-              >
+              <h2 className="text-h-modal-tight text-center font-sans text-brand-indigo">
                 {headline}
               </h2>
             ) : (
-              <h2
-                className="text-h-modal text-center font-sans"
-                style={{
-                  color: "#240F35",
-                  lineHeight: "120%",
-                }}
-              >
+              <h2 className="text-h-modal-tight text-center font-sans text-brand-indigo">
                 {successText}
               </h2>
             )}

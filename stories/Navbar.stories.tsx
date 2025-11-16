@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import Navbar from "../components/layout/Navbar";
 import ActionButton from "../components/ui/ActionButton";
+import Container from "../components/ui/Container";
 
 const meta = {
   title: "Layout/Navbar",
@@ -37,6 +38,10 @@ export const Default: Story = {
       </ActionButton>
     ),
   },
-  render: (args) => <Navbar {...args} />,
+  render: (args) => (
+    <Container>
+      <Navbar {...args} />
+    </Container>
+  ),
 };
 

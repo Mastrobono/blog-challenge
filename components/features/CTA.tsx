@@ -27,7 +27,7 @@ const CTA = React.forwardRef<HTMLDivElement, CTAProps>(
       <div
         ref={ref}
         className={clsx(
-          "w-full bg-[#9C73F7]",
+          "w-full bg-arrow-purple",
           "flex flex-col items-start gap-10 p-10",
           "md:flex-row md:justify-between md:items-center md:gap-[40px] md:px-16 md:py-12",
           className
@@ -35,14 +35,7 @@ const CTA = React.forwardRef<HTMLDivElement, CTAProps>(
         {...props}
       >
         {/* Text */}
-        <p
-          className="text-white text-left font-sans"
-          style={{
-            fontSize: "27px",
-            lineHeight: "121%",
-            letterSpacing: "0px",
-          }}
-        >
+        <p className="text-white text-left font-sans text-xl-regular-tight">
           <span className="font-normal">{normalText} </span>
           <span className="font-semibold">{semiboldText}</span>
         </p>

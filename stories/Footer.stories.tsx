@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import Footer from "../components/layout/Footer";
+import Container from "../components/ui/Container";
 
 const meta = {
   title: "Layout/Footer",
@@ -14,6 +15,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: (args) => <Footer {...args} />,
+  render: (args) => (
+    <Container>
+      <Footer {...args} />
+    </Container>
+  ),
 };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { clsx } from "clsx";
 import Badge from "../ui/Badge";
 import Avatar from "../ui/Avatar";
@@ -20,6 +21,10 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
     alt: string;
     name: string;
   };
+  maxTitleWidth?: string; // Max width for the title container (e.g., "557px")
+  contentPadding?: string; // Custom padding for content overlay (e.g., "px-6 pt-[174px] pb-10")
+  topContent?: React.ReactNode; // Content to render at the top of the content overlay
+  hideBadge?: boolean; // Hide badge when avatar is present (for post variant)
   onReadClick?: (slug: string) => void;
 }
 
@@ -36,18 +41,22 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       titleSize = "normal",
       badge,
       avatar,
+      maxTitleWidth,
+      contentPadding,
+      topContent,
+      hideBadge = false,
       onReadClick,
       ...props
     },
     ref
   ) {
-    const hasBadge = !!badge;
+    const hasBadge = !!badge && !hideBadge;
     const hasAvatar = !!avatar;
     const hasActionButton = hasBadge && !hasAvatar;
 
-    const handleReadClick = () => {
-      onReadClick?.(slug);
-    };
+    // Extract post ID from slug (format: "post-123" or "related-post-1")
+    const postId = slug.replace("post-", "").replace("related-post-", "");
+    const postUrl = `/post/${postId}`;
 
     return (
       <div
@@ -75,7 +84,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         </div>
 
         {/* Content Overlay */}
-        <div className="relative mt-auto flex flex-col">
+        <div className={clsx("relative mt-auto flex flex-col", contentPadding || "px-6 pt-6 pb-3")}>
+          {/* Top Content (e.g., Back Button) */}
+          {topContent && (
+            <div className="mb-6">
+              {topContent}
+            </div>
+          )}
+          
           {/* Badge or Avatar */}
           {hasBadge && (
             <div
@@ -114,6 +130,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
               "bg-neutral-black": variant === "dark",
               "bg-neutral-white": variant === "light",
             })}
+            style={maxTitleWidth ? { maxWidth: maxTitleWidth } : undefined}
           >
             {/* Post Title */}
             <h3
@@ -139,12 +156,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
               })}
             >
               {hasActionButton && (
-                <ActionButton
-                  variant={variant}
-                  onClick={handleReadClick}
-                >
-                  Read
-                </ActionButton>
+                <Link href={postUrl} className="inline-block">
+                  <ActionButton variant={variant}>
+                    Read
+                  </ActionButton>
+                </Link>
               )}
 
               <div className="flex items-center gap-2">
