@@ -4,6 +4,9 @@ import "./globals.css";
 import NavbarClient from "@/components/layout/NavbarClient";
 import Footer from "@/components/layout/Footer";
 import { QueryClientProvider } from "@/providers/QueryClientProvider";
+import { LenisProvider } from "@/providers/LenisProvider";
+import { ModalProvider } from "@/contexts/ModalContext";
+import { ModalWrapper } from "@/components/features/ModalWrapper";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -24,11 +27,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${spaceGrotesk.variable} antialiased`}>
-        <QueryClientProvider>
-          <NavbarClient />
-          {children}
-          
-        </QueryClientProvider>
+        <LenisProvider>
+          <QueryClientProvider>
+            <ModalProvider>
+              <NavbarClient />
+              {children}
+              <ModalWrapper />
+            </ModalProvider>
+          </QueryClientProvider>
+        </LenisProvider>
       </body>
     </html>
   );

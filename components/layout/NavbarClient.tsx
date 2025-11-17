@@ -3,6 +3,7 @@
 import React from "react";
 import Navbar from "./Navbar";
 import ActionButton from "../ui/ActionButton";
+import { useModal } from "@/contexts/ModalContext";
 
 /**
  * Client wrapper for Navbar
@@ -10,9 +11,10 @@ import ActionButton from "../ui/ActionButton";
  * from Server Components to Client Components
  */
 export default function NavbarClient() {
+  const { openModal } = useModal();
+
   const handleNewPostClick = () => {
-    console.log("New post clicked");
-    // TODO: Open modal or navigate to new post page
+    openModal();
   };
 
   return (
