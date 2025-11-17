@@ -1,9 +1,20 @@
 /**
  * API Service for NestJS Backend
  * Base URL: http://localhost:3001/api (development)
+ * Production: https://litebox-challenge-webservice.onrender.com/api
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+// Ensure API_BASE_URL always ends with /api
+const getApiBaseUrl = () => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+  // If URL doesn't end with /api, add it
+  if (!envUrl.endsWith("/api")) {
+    return envUrl.endsWith("/") ? `${envUrl}api` : `${envUrl}/api`;
+  }
+  return envUrl;
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 // Log API configuration on module load (only in development)
 if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
@@ -92,12 +103,12 @@ export async function createPost(data: CreatePostData): Promise<CreatePostRespon
         } catch (e) {
           const text = await response.text();
           console.error("Error Response (Text):", text);
-          errorData = { message: text || "Error al crear el post" };
+          errorData = { message: text || "Failed to create post" };
         }
       } else {
         const text = await response.text();
         console.error("Error Response (Text):", text);
-        errorData = { message: text || "Error al crear el post" };
+        errorData = { message: text || "Failed to create post" };
       }
       
       console.groupEnd();
@@ -112,11 +123,16 @@ export async function createPost(data: CreatePostData): Promise<CreatePostRespon
     console.error("❌ Request Failed:", error);
     console.groupEnd();
     
+    // Handle CORS and network errors specifically
+    if (error instanceof TypeError && error.message === "Failed to fetch") {
+      throw new Error("Network error: Unable to reach the server. Please check your connection and ensure CORS is configured on the backend.");
+    }
+    
     // Re-throw with more context if it's not already an Error
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error(`Error de conexión: ${String(error)}`);
+    throw new Error(`Connection error: ${String(error)}`);
   }
 }
 
@@ -154,12 +170,12 @@ export async function getRelatedPosts(): Promise<RelatedPost[]> {
         } catch (e) {
           const text = await response.text();
           console.error("Error Response (Text):", text);
-          errorData = { message: text || "Error al obtener los posts" };
+          errorData = { message: text || "Failed to fetch posts" };
         }
       } else {
         const text = await response.text();
         console.error("Error Response (Text):", text);
-        errorData = { message: text || "Error al obtener los posts" };
+        errorData = { message: text || "Failed to fetch posts" };
       }
       
       console.groupEnd();
@@ -175,11 +191,16 @@ export async function getRelatedPosts(): Promise<RelatedPost[]> {
     console.error("❌ Request Failed:", error);
     console.groupEnd();
     
+    // Handle CORS and network errors specifically
+    if (error instanceof TypeError && error.message === "Failed to fetch") {
+      throw new Error("Network error: Unable to reach the server. Please check your connection and ensure CORS is configured on the backend.");
+    }
+    
     // Re-throw with more context if it's not already an Error
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error(`Error de conexión: ${String(error)}`);
+    throw new Error(`Connection error: ${String(error)}`);
   }
 }
 

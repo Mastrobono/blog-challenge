@@ -236,7 +236,7 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
         setSubmitError(null); // Clear any previous errors
       } catch (error) {
         console.error("❌ Modal Submit Error:", error);
-        const errorMessage = error instanceof Error ? error.message : "Error al crear el post";
+        const errorMessage = error instanceof Error ? error.message : "Failed to create post";
         setSubmitError(errorMessage);
         
         // Log full error details for debugging

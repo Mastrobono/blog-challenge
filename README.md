@@ -249,3 +249,52 @@ export async function generateStaticParams() {
 **Future Considerations:**
 - If posts are added frequently, consider implementing ISR with `revalidate` to regenerate pages periodically
 - For very large datasets, consider generating only the most popular posts statically and using SSR for the rest
+
+---
+
+## 🔧 API Configuration & CORS Setup
+
+### Environment Variables
+
+**Vercel Environment Variables:**
+- `NEXT_PUBLIC_API_URL`: Backend API URL (must include `/api` suffix)
+  - Production: `https://litebox-challenge-webservice.onrender.com/api`
+
+### CORS Configuration
+
+The backend must be configured to allow requests from your Vercel deployment domain.
+
+**Backend Configuration (NestJS `src/main.ts`):**
+```typescript
+const allowedOrigins = [
+  process.env.FRONTEND_URL, // Set in Render environment variables
+].filter(Boolean);
+
+app.enableCors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+});
+```
+
+**Render Environment Variable:**
+- `FRONTEND_URL`: Your Vercel deployment URL (e.g., `https://lite-tech-challenge-kappa.vercel.app`)
+
+See `CORS_SETUP.md` for detailed CORS configuration instructions.
+
+---
+
+## 🔄 GitHub & GitLab Sync
+
+This repository is synced to both GitLab (private) and GitHub (public) for deployment purposes.
+
+**Remotes:**
+- `origin`: GitLab (private repository)
+- `github`: GitHub (public repository for Vercel deployment)
+
+**Sync Scripts:**
+- Windows: `.\scripts\sync-remotes.ps1`
+- Linux/Mac: `./scripts/sync-remotes.sh`
+
+See `.gitconfig-sync.md` for detailed synchronization instructions.

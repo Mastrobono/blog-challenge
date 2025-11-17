@@ -53,7 +53,7 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
             </ActionButton>
           </div>
           <div className="text-center py-8 text-neutral-gray-light">
-            Cargando posts...
+            Loading posts...
           </div>
         </div>
       );
@@ -72,7 +72,7 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
             </ActionButton>
           </div>
           <div className="text-center py-8 text-status-fail">
-            Error al cargar los posts. Por favor, intenta de nuevo.
+            Failed to load posts. Please try again.
           </div>
         </div>
       );
@@ -91,7 +91,7 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
             </ActionButton>
           </div>
           <div className="text-center py-8 text-neutral-gray-light">
-            No hay posts disponibles. ¡Crea el primero!
+            No posts available. Create the first one!
           </div>
         </div>
       );
