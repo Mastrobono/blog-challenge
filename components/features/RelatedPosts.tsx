@@ -61,6 +61,11 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
 
     // Show error state
     if (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to load posts";
+      const errorDetails = error instanceof Error && (error as any).status 
+        ? ` (Status: ${(error as any).status})` 
+        : "";
+      
       return (
         <div ref={ref} className={clsx("flex flex-col gap-[10px]", className)} {...props}>
           <div className="flex items-center justify-between">
@@ -72,7 +77,10 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
             </ActionButton>
           </div>
           <div className="text-center py-8 text-status-fail">
-            Failed to load posts. Please try again.
+            <p>Failed to load posts. Please try again.</p>
+            {process.env.NODE_ENV === "development" && (
+              <p className="text-xs mt-2 opacity-75">{errorMessage}{errorDetails}</p>
+            )}
           </div>
         </div>
       );

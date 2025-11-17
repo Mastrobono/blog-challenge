@@ -16,11 +16,12 @@ const getApiBaseUrl = () => {
 
 const API_BASE_URL = getApiBaseUrl();
 
-// Log API configuration on module load (only in development)
-if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+// Log API configuration on module load (always, for debugging)
+if (typeof window !== "undefined") {
   console.log("🔧 API Configuration:", {
     API_BASE_URL,
     envVar: process.env.NEXT_PUBLIC_API_URL || "(not set, using default)",
+    environment: process.env.NODE_ENV,
   });
 }
 
@@ -96,23 +97,42 @@ export async function createPost(data: CreatePostData): Promise<CreatePostRespon
       let errorData;
       const contentType = response.headers.get("content-type");
       
+      // Try to get error details
+      let responseText = "";
+      try {
+        responseText = await response.clone().text();
+      } catch (e) {
+        // If we can't read the text, continue with empty string
+      }
+      
       if (contentType && contentType.includes("application/json")) {
         try {
           errorData = await response.json();
           console.error("Error Response (JSON):", errorData);
+          console.error("Full error object:", JSON.stringify(errorData, null, 2));
         } catch (e) {
-          const text = await response.text();
-          console.error("Error Response (Text):", text);
-          errorData = { message: text || "Failed to create post" };
+          console.error("Error Response (Text):", responseText);
+          errorData = { message: responseText || "Failed to create post" };
         }
       } else {
-        const text = await response.text();
-        console.error("Error Response (Text):", text);
-        errorData = { message: text || "Failed to create post" };
+        console.error("Error Response (Text):", responseText);
+        errorData = { message: responseText || "Failed to create post" };
       }
       
+      // Log additional debugging info
+      console.error("Response Status:", response.status, response.statusText);
+      console.error("Response Headers:", Object.fromEntries(response.headers.entries()));
+      console.error("Request URL:", url);
+      
       console.groupEnd();
-      throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
+      
+      // Create more detailed error message
+      const errorMessage = errorData.message || errorData.error || `Error ${response.status}: ${response.statusText}`;
+      const detailedError = new Error(errorMessage);
+      (detailedError as any).status = response.status;
+      (detailedError as any).responseData = errorData;
+      (detailedError as any).url = url;
+      throw detailedError;
     }
 
     const result = await response.json();
@@ -163,23 +183,42 @@ export async function getRelatedPosts(): Promise<RelatedPost[]> {
       let errorData;
       const contentType = response.headers.get("content-type");
       
+      // Try to get error details
+      let responseText = "";
+      try {
+        responseText = await response.clone().text();
+      } catch (e) {
+        // If we can't read the text, continue with empty string
+      }
+      
       if (contentType && contentType.includes("application/json")) {
         try {
           errorData = await response.json();
           console.error("Error Response (JSON):", errorData);
+          console.error("Full error object:", JSON.stringify(errorData, null, 2));
         } catch (e) {
-          const text = await response.text();
-          console.error("Error Response (Text):", text);
-          errorData = { message: text || "Failed to fetch posts" };
+          console.error("Error Response (Text):", responseText);
+          errorData = { message: responseText || "Failed to fetch posts" };
         }
       } else {
-        const text = await response.text();
-        console.error("Error Response (Text):", text);
-        errorData = { message: text || "Failed to fetch posts" };
+        console.error("Error Response (Text):", responseText);
+        errorData = { message: responseText || "Failed to fetch posts" };
       }
       
+      // Log additional debugging info
+      console.error("Response Status:", response.status, response.statusText);
+      console.error("Response Headers:", Object.fromEntries(response.headers.entries()));
+      console.error("Request URL:", url);
+      
       console.groupEnd();
-      throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
+      
+      // Create more detailed error message
+      const errorMessage = errorData.message || errorData.error || `Error ${response.status}: ${response.statusText}`;
+      const detailedError = new Error(errorMessage);
+      (detailedError as any).status = response.status;
+      (detailedError as any).responseData = errorData;
+      (detailedError as any).url = url;
+      throw detailedError;
     }
 
     const result = await response.json();

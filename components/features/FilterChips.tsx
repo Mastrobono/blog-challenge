@@ -64,12 +64,12 @@ const FilterChips = React.forwardRef<HTMLDivElement, FilterChipsProps>(
               All
             </Chip>
           ) : (
-            <Chip
+          <Chip
               variant="default"
-              onClick={handleAllClick}
-            >
-              All
-            </Chip>
+            onClick={handleAllClick}
+          >
+            All
+          </Chip>
           )}
 
           {/* Other Chips */}
