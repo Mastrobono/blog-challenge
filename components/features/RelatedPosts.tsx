@@ -1,62 +1,101 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { clsx } from "clsx";
 import ActionButton from "../ui/ActionButton";
 import Card from "./Card";
 import { CardProps } from "./Card";
+import { useRelatedPosts } from "@/hooks/useRelatedPosts";
+import { useModal } from "@/contexts/ModalContext";
 
 export interface RelatedPostsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 /**
  * RelatedPosts Component
- * 
- * NOTE: Currently using mocked data. Once the Modal component is integrated,
- * posts will be loaded via React Query and displayed here.
+ * Fetches and displays the last 3 posts using React Query
  */
 const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
   function RelatedPosts({ className, ...props }, ref) {
-    // Handle new post click internally
+    const { openModal } = useModal();
+    const { data: posts, isLoading, error } = useRelatedPosts();
+
+    // Handle new post click - open modal
     const handleNewPostClick = useCallback(() => {
-      console.log("New post clicked");
-      // TODO: Open modal or navigate to new post page
-    }, []);
+      openModal();
+    }, [openModal]);
 
-    // Cards now use Link for navigation, so no need for handleReadClick
+    // Transform API posts to CardProps
+    const relatedPosts: CardProps[] = useMemo(() => {
+      if (!posts || posts.length === 0) return [];
 
-    // Mock posts - TODO: Replace with React Query data from Modal
-    const mockRelatedPosts: CardProps[] = [
-      {
-        imageSrc: "/assets/hero-placeholder.png",
-        imageAlt: "Related post 1",
-        postTitle: "Related Post Title 1",
-        slug: "related-post-1",
-        readTime: "5 min read",
-        badge: "Technology",
-        variant: "light",
-        titleSize: "normal",
-      },
-      {
-        imageSrc: "/assets/hero-placeholder.png",
-        imageAlt: "Related post 2",
-        postTitle: "Related Post Title 2",
-        slug: "related-post-2",
-        readTime: "7 min read",
-        badge: "AI",
-        variant: "light",
-        titleSize: "normal",
-      },
-      {
-        imageSrc: "/assets/hero-placeholder.png",
-        imageAlt: "Related post 3",
-        postTitle: "Related Post Title 3",
-        slug: "related-post-3",
-        readTime: "4 min read",
-        badge: "Security",
-        variant: "light",
-        titleSize: "normal",
-      },
-    ];
+      return posts.slice(0, 3).map((post) => ({
+        imageSrc: post.imageUrl,
+        imageAlt: post.title,
+        postTitle: post.title,
+        slug: `post-${post.id}`, // Generate slug from ID
+        readTime: "5 min read", // Default read time, can be updated if API provides it
+        badge: post.topic || "General",
+        variant: "light" as const,
+        titleSize: "normal" as const,
+      }));
+    }, [posts]);
+
+    // Show loading state
+    if (isLoading) {
+      return (
+        <div ref={ref} className={clsx("flex flex-col gap-[10px]", className)} {...props}>
+          <div className="flex items-center justify-between">
+            <h2 className="font-sans text-h-related-tight text-neutral-black">
+              Related Posts
+            </h2>
+            <ActionButton variant="light" onClick={handleNewPostClick}>
+              New post
+            </ActionButton>
+          </div>
+          <div className="text-center py-8 text-neutral-gray-light">
+            Cargando posts...
+          </div>
+        </div>
+      );
+    }
+
+    // Show error state
+    if (error) {
+      return (
+        <div ref={ref} className={clsx("flex flex-col gap-[10px]", className)} {...props}>
+          <div className="flex items-center justify-between">
+            <h2 className="font-sans text-h-related-tight text-neutral-black">
+              Related Posts
+            </h2>
+            <ActionButton variant="light" onClick={handleNewPostClick}>
+              New post
+            </ActionButton>
+          </div>
+          <div className="text-center py-8 text-status-fail">
+            Error al cargar los posts. Por favor, intenta de nuevo.
+          </div>
+        </div>
+      );
+    }
+
+    // Show empty state
+    if (relatedPosts.length === 0) {
+      return (
+        <div ref={ref} className={clsx("flex flex-col gap-[10px]", className)} {...props}>
+          <div className="flex items-center justify-between">
+            <h2 className="font-sans text-h-related-tight text-neutral-black">
+              Related Posts
+            </h2>
+            <ActionButton variant="light" onClick={handleNewPostClick}>
+              New post
+            </ActionButton>
+          </div>
+          <div className="text-center py-8 text-neutral-gray-light">
+            No hay posts disponibles. ¡Crea el primero!
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div ref={ref} className={clsx("flex flex-col gap-[10px]", className)} {...props}>
@@ -70,10 +109,10 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
           </ActionButton>
         </div>
 
-        {/* Second Row: 3 Post Cards in horizontal layout */}
+        {/* Second Row: Post Cards in horizontal layout */}
         <div className="flex flex-col md:flex-row gap-[10px]">
-          {mockRelatedPosts.map((post, index) => (
-            <div key={index} className="flex-1" style={{ maxHeight: "378px" }}>
+          {relatedPosts.map((post, index) => (
+            <div key={post.slug || index} className="flex-1" style={{ maxHeight: "378px" }}>
               <Card {...post} className="h-full" />
             </div>
           ))}

@@ -8,6 +8,7 @@ import InputText from "../ui/InputText";
 import InputFile from "../ui/InputFile";
 import LoaderBar from "../ui/LoaderBar";
 import Button from "../ui/Button";
+import { useCreatePost } from "@/hooks/useRelatedPosts";
 
 export interface ModalFormData {
   title: string;
@@ -33,17 +34,6 @@ const mockUploadImageLocal = async (file: File): Promise<File> => {
   return file;
 };
 
-// Mock API function for submitting the form
-// NOTE: Error handling flags:
-// - Image upload errors: Handled with retry/cancel (localUploadStatus === "failure")
-// - Form submission errors: Assumed to always succeed per requirements
-//   If submission fails in production, it would be handled by the onSubmit callback
-const mockSubmitPost = async (data: ModalFormData): Promise<void> => {
-  // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  console.log("Post submitted:", data);
-};
-
 const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
   function Modal(
     {
@@ -64,7 +54,11 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const [isSuccess, setIsSuccess] = useState(false);
     const [imageError, setImageError] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
     const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    
+    // Use the createPost mutation hook
+    const createPostMutation = useCreatePost();
 
     const {
       register,
@@ -142,22 +136,24 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       },
     });
 
-    // Mutation for form submission
-    const submitMutation = useMutation({
-      mutationFn: async (data: ModalFormData) => {
-        if (onSubmit) {
-          return await onSubmit(data);
-        }
-        return await mockSubmitPost(data);
-      },
-      onSuccess: () => {
-        setIsSuccess(true);
-      },
-      onError: (error) => {
-        console.error("Submit error:", error);
-        // Error handling: show error message (we assume submit always succeeds per requirements)
-      },
-    });
+    // Handle form submission with API
+    const handleApiSubmit = async (data: ModalFormData) => {
+      if (!uploadedFile) {
+        throw new Error("Image is required");
+      }
+
+      if (onSubmit) {
+        // Use custom onSubmit if provided
+        return await onSubmit(data);
+      }
+
+      // Use the API mutation
+      return await createPostMutation.mutateAsync({
+        title: data.title,
+        image: uploadedFile,
+        // topic is optional, can be added later if needed
+      });
+    };
 
     // Handle file selection - trigger local upload
     useEffect(() => {
@@ -207,6 +203,9 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     }, []);
 
     const onFormSubmit = async (data: ModalFormData) => {
+      // Clear previous errors
+      setSubmitError(null);
+      
       // Validate title field
       const isTitleValid = await trigger("title");
       
@@ -230,7 +229,24 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       
       // Clear errors if both are valid
       setImageError(false);
-      submitMutation.mutate(data);
+      
+      try {
+        await handleApiSubmit(data);
+        setIsSuccess(true);
+        setSubmitError(null); // Clear any previous errors
+      } catch (error) {
+        console.error("❌ Modal Submit Error:", error);
+        const errorMessage = error instanceof Error ? error.message : "Error al crear el post";
+        setSubmitError(errorMessage);
+        
+        // Log full error details for debugging
+        if (error instanceof Error) {
+          console.error("Error details:", {
+            message: error.message,
+            stack: error.stack,
+          });
+        }
+      }
     };
 
     const handleSuccessButtonClick = () => {
@@ -240,8 +256,9 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       setLocalUploadStatus("idle");
       setUploadedFile(null);
       setImageError(false);
+      setSubmitError(null);
       imageUploadMutation.reset();
-      submitMutation.reset();
+      createPostMutation.reset();
       onClose?.();
     };
 
@@ -287,7 +304,7 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     };
 
     const showLoaderBar = localUploadStatus === "loading" || localUploadStatus === "success" || localUploadStatus === "failure";
-    const isSubmitting = submitMutation.isPending;
+    const isSubmitting = createPostMutation.isPending;
 
     return (
       <div
@@ -364,6 +381,13 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
                   disabled={isSubmitting}
                 />
 
+                {/* Error message for API submission */}
+                {submitError && (
+                  <div className="text-xs-label text-status-fail text-center">
+                    {submitError}
+                  </div>
+                )}
+
                 {/* Input File or LoaderBar */}
                 {!showLoaderBar ? (
                   <Controller
@@ -407,21 +431,19 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
               </div>
 
               {/* Submit Button */}
-              {!isSubmitting && (
-                <div className="flex justify-center">
-                  <Button
-                    variant="black"
-                    className="!w-auto"
-                    disabled={isSubmitting || localUploadStatus === "failure"}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleSubmit(onFormSubmit)();
-                    }}
-                  >
-                    {buttonText}
-                  </Button>
-                </div>
-              )}
+              <div className="flex justify-center">
+                <Button
+                  variant="black"
+                  className="!w-auto"
+                  disabled={isSubmitting || localUploadStatus === "failure"}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSubmit(onFormSubmit)();
+                  }}
+                >
+                  {isSubmitting ? "Submitting..." : buttonText}
+                </Button>
+              </div>
             </form>
           )}
 
