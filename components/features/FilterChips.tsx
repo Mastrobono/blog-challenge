@@ -36,15 +36,16 @@ const FilterChips = React.forwardRef<HTMLDivElement, FilterChipsProps>(
     const isAllActive = activeChips.includes("all");
 
     return (
-      <div
-        ref={ref}
-        className={clsx(
-          "w-full",
-          "flex flex-col gap-6",
-          className
-        )}
-        {...props}
-      >
+
+        <div
+          ref={ref}
+          className={clsx(
+            "w-full",
+            "flex flex-col gap-6",
+            className
+          )}
+          {...props}
+        >
         {/* Title */}
         <h2 className="text-lg-bold font-sans text-white">
           {title}
@@ -54,23 +55,40 @@ const FilterChips = React.forwardRef<HTMLDivElement, FilterChipsProps>(
         <div className="w-full overflow-x-auto overflow-y-hidden scrollbar-hide">
           <div className="flex items-center gap-2 min-w-max pb-1">
           {/* "All" Chip - Always first */}
-          <Chip
-            variant={isAllActive ? "active" : "default"}
-            onClick={handleAllClick}
-            onRemove={isAllActive ? () => onChipToggle("all") : undefined}
-          >
-            All
-          </Chip>
+          {isAllActive ? (
+            <Chip
+              variant="active"
+              onClick={handleAllClick}
+              onRemove={() => onChipToggle("all")}
+            >
+              All
+            </Chip>
+          ) : (
+            <Chip
+              variant="default"
+              onClick={handleAllClick}
+            >
+              All
+            </Chip>
+          )}
 
           {/* Other Chips */}
           {chips.map((chip) => {
             const isActive = activeChips.includes(chip.id);
-            return (
+            return isActive ? (
               <Chip
                 key={chip.id}
-                variant={isActive ? "active" : "default"}
+                variant="active"
                 onClick={() => onChipToggle(chip.id)}
-                onRemove={isActive ? () => onChipToggle(chip.id) : undefined}
+                onRemove={() => onChipToggle(chip.id)}
+              >
+                {chip.label}
+              </Chip>
+            ) : (
+              <Chip
+                key={chip.id}
+                variant="default"
+                onClick={() => onChipToggle(chip.id)}
               >
                 {chip.label}
               </Chip>

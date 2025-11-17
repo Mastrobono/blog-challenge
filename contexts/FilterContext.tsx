@@ -8,6 +8,7 @@ interface FilterContextType {
   toggleFilter: (filterId: string) => void;
   clearFilters: () => void;
   chips: FilterChipItem[];
+  updateChips: (chips: FilterChipItem[]) => void;
   mainCardPosition: "left" | "right";
   toggleMainCardPosition: () => void;
 }

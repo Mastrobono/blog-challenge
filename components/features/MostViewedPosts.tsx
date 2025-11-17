@@ -20,7 +20,7 @@ const MostViewedPosts = React.forwardRef<HTMLDivElement, MostViewedPostsProps>(
   function MostViewedPosts({ className, posts, variant = "dark", ...props }, ref) {
     return (
       <div ref={ref} className={clsx("flex flex-col", className)} {...props}>
-        {/* Label */}
+
         <p
           className={clsx(
             "font-sans mb-6 text-lg-semibold-tight",
@@ -32,13 +32,14 @@ const MostViewedPosts = React.forwardRef<HTMLDivElement, MostViewedPostsProps>(
 
         {/* Posts List */}
         <div className="flex flex-col">
-          {posts.map((post) => (
-            <ViewedPost
-              key={post.id}
-              postHead={post.postHead}
-              imageSrc={post.imageSrc}
-              imageAlt={post.imageAlt}
-            />
+          {posts.map((post, index) => (
+           
+              <ViewedPost
+                key={post.id}
+                postHead={post.postHead}
+                imageSrc={post.imageSrc}
+                imageAlt={post.imageAlt}
+              />
           ))}
         </div>
       </div>
