@@ -81,6 +81,9 @@ export const Default: Story = {
     title: "Topics",
     chips: sampleChips,
     activeChips: ["all"],
+    onChipToggle: (chipId: string) => {
+      console.log("Chip toggled:", chipId);
+    },
   },
 };
 
@@ -89,6 +92,9 @@ export const WithActiveFilters: Story = {
     title: "Topics",
     chips: sampleChips,
     activeChips: ["technology", "design"],
+    onChipToggle: (chipId: string) => {
+      console.log("Chip toggled:", chipId);
+    },
   },
 };
 

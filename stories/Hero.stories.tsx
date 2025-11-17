@@ -38,10 +38,6 @@ const meta = {
       control: "boolean",
       description: "Show back button (only for post variant)",
     },
-    onBackClick: {
-      action: "backClicked",
-      description: "Callback when back button is clicked",
-    },
   },
 } satisfies Meta<typeof Hero>;
 
@@ -59,6 +55,7 @@ const mockMostRecentPost: ApiPost = {
     publishedAt: "2024-01-15T00:00:00.000Z",
     coverImg: {
       data: {
+        id: 1,
         attributes: {
           url: "/assets/hero-placeholder.png",
           alternativeText: "AI videos on YouTube",
@@ -79,6 +76,7 @@ const mockPostById: ApiPost = {
     publishedAt: "2024-01-15T00:00:00.000Z",
     coverImg: {
       data: {
+        id: 1,
         attributes: {
           url: "/assets/hero-placeholder.png",
           alternativeText: "AI videos on YouTube",
@@ -109,7 +107,6 @@ export const PostVariant: Story = {
     variant: "post",
     card: sampleCardPost,
     showBackButton: true,
-    onBackClick: () => console.log("Back clicked"),
   },
   render: (args) => (
     <Container>

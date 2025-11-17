@@ -5,7 +5,7 @@ type ChipPropsBase = {
   children: React.ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-type ChipProps =
+export type ChipProps =
   | (ChipPropsBase & {
       variant?: "default";
       onRemove?: () => void;
@@ -35,7 +35,7 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>(
         {...props}
       >
         <span className="text-base-regular align-middle">{children}</span>
-        {variant === "active" && (
+        {variant === "active" && onRemove && (
           <button
             type="button"
             onClick={(e) => {

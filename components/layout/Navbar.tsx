@@ -4,11 +4,11 @@ import React from "react";
 import Link from "next/link";
 import { clsx } from "clsx";
 
-export interface NavbarProps extends React.HTMLAttributes<HTMLNavElement> {
+export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   buttonClick?: React.ReactNode;
 }
 
-const Navbar = React.forwardRef<HTMLNavElement, NavbarProps>(
+const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
   function Navbar({ className, buttonClick, style, ...props }, ref) {
     return (
       <nav

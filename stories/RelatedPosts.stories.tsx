@@ -18,21 +18,14 @@ const meta = {
     },
   },
   tags: ["autodocs"],
-  argTypes: {
-    onNewPostClick: {
-      action: "newPostClicked",
-      description: "Callback when 'New post' button is clicked",
-    },
-  },
+  argTypes: {},
 } satisfies Meta<typeof RelatedPosts>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    onNewPostClick: () => console.log("New post clicked"),
-  },
+  args: {},
   render: (args) => (
     <Container>
       <RelatedPosts {...args} />

@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { clsx } from "clsx";
 
 export interface InputFileProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type" | "onChange"> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
   onFileChange?: (files: FileList | null) => void;
   error?: string | boolean;
 }
