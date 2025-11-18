@@ -11,7 +11,7 @@ export default async function HomePage() {
   const mostRecentPost = await getMostRecentPost();
   const allPosts = await getAllPosts(100);
   const mostViewedPosts = await getMostViewedPosts();
-  
+
   // Extract topics for initial chips
   const uniqueTopics = extractUniqueTopics(allPosts);
   const initialTopics = uniqueTopics.map((topic) => ({
@@ -23,16 +23,18 @@ export default async function HomePage() {
   const initialPosts = allPosts.slice(0, 9);
 
   return (
-    <Container>
-      {/* Hero Section - Outside columns */}
-      {mostRecentPost && (
-        <Hero
-          variant="home"
-          label="Today story"
-          card={mapApiPostToCardProps(mostRecentPost)}
-        />
-      )}
 
+    <Container>
+
+      {
+        mostRecentPost && (
+          <Hero
+            variant="home"
+            label="Today story"
+            card={mapApiPostToCardProps(mostRecentPost)}
+          />
+        )
+      }
       {/* FilterChips and Posts with shared context */}
       <FilteredPostsProvider initialTopics={initialTopics}>
         {/* FilterChips - Outside columns */}
@@ -44,14 +46,14 @@ export default async function HomePage() {
         <div className="flex flex-col md:flex-row gap-6">
           {/* Left Column: GridCards + CTA */}
           <div className="flex-1 flex flex-col">
-            <FilteredPostsContent 
+            <FilteredPostsContent
               allPosts={allPosts}
               initialTopics={initialTopics}
             />
           </div>
 
           {/* Right Column: Most Viewed Posts (Fixed) */}
-          <aside className="w-full md:w-[300px] md:sticky md:top-[100px] md:self-start md:max-h-[calc(100vh-100px)] md:overflow-y-auto">
+          <aside className="w-full md:block hidden md:w-[300px] md:sticky md:top-[100px] md:self-start md:max-h-[calc(100vh-100px)] md:overflow-y-auto">
             <MostViewedPosts posts={mostViewedPosts} variant="dark" />
           </aside>
         </div>

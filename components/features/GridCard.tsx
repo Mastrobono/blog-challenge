@@ -82,7 +82,7 @@ const GridCard = React.forwardRef<HTMLDivElement, GridCardProps>(
         <div className="w-full md:min-h-[600px]">
       <div
         className={clsx(
-          "flex flex-col gap-4",
+          "flex flex-col  gap-8 md:gap-4",
               "md:grid md:grid-cols-2 md:grid-rows-2 md:items-stretch md:gap-4 md:h-full md:min-h-0"
         )}
       >

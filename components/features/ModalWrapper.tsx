@@ -129,7 +129,7 @@ export function ModalWrapper() {
   return createPortal(
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-5"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
       onClick={(e) => {
         // Close modal when clicking directly on the overlay

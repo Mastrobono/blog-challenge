@@ -12,7 +12,7 @@ const Footer = React.forwardRef<HTMLDivElement, FooterProps>(
       <div
         ref={ref}
         className={clsx(
-          "w-full bg-arrow-purple px-16 py-[66px] mt-[238px]",
+          "w-full bg-arrow-purple px-16 py-[66px] md:mt-6",
           "flex flex-col items-center gap-[56px]",
           "md:items-start md:gap-[40px]",
           className

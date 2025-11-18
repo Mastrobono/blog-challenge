@@ -3,8 +3,10 @@ import Hero from "@/components/features/Hero";
 import MostViewedPosts from "@/components/features/MostViewedPosts";
 import RelatedPosts from "@/components/features/RelatedPosts";
 import SocialMedia from "@/components/ui/SocialMedia";
+import MarkdownContent from "@/components/features/MarkdownContent";
 import { getPostById, getMostViewedPosts, mapApiPostToCardProps } from "@/lib/posts";
 import { getAllPosts } from "@/lib/posts";
+import { getParsedMarkdownContent } from "@/lib/markdown";
 import Footer from "@/components/layout/Footer";
 
 /**
@@ -43,95 +45,49 @@ export default async function PostPage({
     const post = await getPostById(postId);
     const mostViewedPosts = await getMostViewedPosts();
 
-    // Mock markdown content - TODO: Replace with actual post body from API
-    const markdownContent = `# Curabitur sit amet sapien at velit fringilla tincidunt porttitor eget lacus. Sed mauris libero,
-
-malesuada et venenatis vitae, porta ac enim. Curabitur sit amet sapien at velit fringilla
-
-tincidunt porttitor eget lacus. Sed mauris libero, malesuada et venenatis vitae, porta ac enim.
-
-Aliquam erat volutpat. Cras tristique eleifend dolor, et ultricies nisl feugiat sed. Pellentesque
-
-blandit orci eu velit vehicula commodo. Phasellus imperdiet finibus ex eget gravida. Maecenas
-
-vitae molestie dolor. Nulla hendrerit ipsum leo, in tempor urna interdum ut. Sed molestie sodales
-
-quam. Mauris sollicitudin metus at eros imperdiet, vitae pulvinar nunc condimentum. Pellentesque
-
-rhoncus, lacus sit amet mollis placerat, nulla lectus maximus justo, quis gravida elit augue id.
-
-![imagen blog](https://litetech-assets.s3.us-east-2.amazonaws.com/Image.png)
-
-# Pellentesque venenatis arcu lectu Maecenas iaculis et dolor ac laoreet. Curabitur placerat porta
-
-dolor. Quisque consectetur vitae odio ac posuere. Nullam tristique tellus purus, quis aliquet
-
-purus sodales sed. Sed hendrerit gravida augue luctus suscipit. Maecenas id faucibus magna. Sed
-
-placerat orci ac orci blandit, at porta ante ornare. Praesent tristique sollicitudin fringilla.
-
-Morbi at laoreet enim, sed viverra ligula. Sed laoreet, elit vel faucibus semper, urna ante
-
-euismod sem, accumsan volutpat augue ante ut elit. Phasellus rutrum, nulla vitae euismod blandit,
-
-elit nisi placerat neque, vitae facilisis massa sapien a mi. Fusce sit amet blandit lectus.
-
-![imagen blog](https://litetech-assets.s3.us-east-2.amazonaws.com/Image2.png)
-
-> Commodo eget mi. In orci nunc, laoreet eleifend sem vel, suscipitlon lorem ipsum
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce vel sem in nunc porttitor dapibus a sollicitudin nunc. Sed lacinia nisl a magna congue, maximus tristique tellus finibus.
-
-# Nullam tristique tellus purus Maecenas iaculis et dolor ac laoreet. Curabitur placerat porta
-
-dolor. Quisque consectetur vitae odio ac posuere. Nullam tristique tellus purus, quis aliquet
-
-purus sodales sed. Sed hendrerit gravida augue luctus suscipit. Maecenas id faucibus magna. Sed
-
-placerat orci ac orci blandit, at porta ante ornare. Praesent tristique sollicitudin fringilla.
-
-Morbi at laoreet enim, sed viverra ligula. Sed laoreet, elit vel faucibus semper, urna ante
-
-euismod sem, accumsan volutpat augue ante ut elit. Phasellus rutrum, nulla vitae euismod blandit,
-
-elit nisi placerat neque, vitae facilisis massa sapien a mi. Fusce sit amet blandit lectus.`;
+    // Get parsed markdown content from file (always uses post-1.md)
+    const htmlContent = await getParsedMarkdownContent();
 
     return (
-        <Container className="bg-neutral-white">
-            {/* Hero Section */}
+        <>
+            {/* Hero Section - Outside Container */}
             <Hero
                 variant="post"
                 card={mapApiPostToCardProps(post, { includeAvatar: true })}
                 showBackButton={true}
             />
 
-            {/* Three Column Layout */}
-            <div className="flex flex-col md:flex-row gap-6 mt-10">
-                {/* Left Column: Social Media */}
-                <aside className="w-full md:w-[300px]">
-                    <SocialMedia variant="light" showLabel={true} />
-                </aside>
+            <Container className="bg-neutral-white">
+                {/* Three Column Layout */}
+                <div className="flex flex-col md:flex-row gap-6 mt-10">
+                    {/* Left Column: Social Media - Desktop only, sticky */}
+                    <aside className="hidden md:block w-full md:w-[25%] md:sticky md:top-[100px] md:self-start md:max-h-[calc(100vh-100px)] md:overflow-y-auto">
+                        <SocialMedia variant="light" showLabel={true} />
+                    </aside>
 
-                {/* Middle Column: Markdown Content */}
-                <main className="flex-1">
-                    <div
-                        className="prose prose-lg max-w-none"
-                        dangerouslySetInnerHTML={{ __html: markdownContent.replace(/\n/g, "<br />") }}
-                    />
-                </main>
+                    {/* Middle Column: Markdown Content */}
+                    <main className="flex-1">
+                        <MarkdownContent htmlContent={htmlContent} />
+                        
+                        {/* Social Media - Mobile only, shown below markdown */}
+                        <div className="block md:hidden mt-6">
+                            <SocialMedia variant="light" showLabel={true} />
+                        </div>
+                    </main>
 
-                {/* Right Column: Most Viewed Posts (Fixed) */}
-                <aside className="w-full md:w-[300px] md:sticky md:top-[100px] md:self-start md:h-screen md:overflow-y-auto">
-                    <MostViewedPosts posts={mostViewedPosts} variant="light" />
-                </aside>
-            </div>
+                    {/* Right Column: Most Viewed Posts (Fixed) */}
+                    <aside className="hidden md:block w-full md:w-[300px] md:sticky md:top-[100px] md:self-start md:max-h-[calc(100vh-100px)] md:overflow-y-auto">
+                        <MostViewedPosts posts={mostViewedPosts} variant="light" />
+                    </aside>
+                </div>
 
-            {/* Related Posts below columns */}
-            <div className="mt-10">
-                <RelatedPosts />
-            </div>
-            <Footer />
-        </Container>
+                {/* Related Posts below columns */}
+                <div className="md:mt-10 py-16 px-0 md:px-12">
+                    <RelatedPosts />
+                </div>
+                <Footer />
+            </Container>
+        </>
     );
 }
 

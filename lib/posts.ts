@@ -39,7 +39,7 @@ export function mapApiPostToCardProps(
     imageAlt: attrs.coverImg?.data?.attributes?.alternativeText || attrs.title || "Post image",
     postTitle: attrs.title || "Untitled",
     slug: `post-${post.id}`,
-    readTime: attrs.readTime ? `${attrs.readTime} min read` : "5 min read",
+    readTime: attrs.readTime ? `${attrs.readTime} min` : "5 min",
     badge: attrs.topic || "General",
     avatar:
       options?.includeAvatar && attrs.author
@@ -133,14 +133,15 @@ export async function getAllPosts(limit: number = 100): Promise<ApiPost[]> {
 
 /**
  * Fetch the most recent post for Hero (home variant)
+ * It must be really the most recent but for design reasons we are handpicking one =)
  */
 export async function getMostRecentPost(): Promise<ApiPost | null> {
   const response = await fetchPosts({
     page: 0,
-    pageSize: 1,
+    pageSize: 20,
     sort: "publishedAt:desc",
   });
-  return response.data[0] || null;
+  return response.data[11] || null;
 }
 
 /**

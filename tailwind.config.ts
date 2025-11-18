@@ -22,6 +22,10 @@ const config: Config = {
         "bg-lavender": "hsl(259, 53%, 97%)",
         "disabled-bg": "#FEFDF9",
         "arrow-purple": "#9C73F7",
+        // Markdown Post Content Colors
+        "markdown-text": "#595959", // Color for paragraphs
+        "markdown-text-underline": "#000000", // Color for underlined spans
+        "markdown-blockquote-border": "#d8f34e", // Border color for blockquotes
       },
       fontFamily: {
         sans: ["var(--font-space-grotesk)", "Space Grotesk", "sans-serif"],
@@ -31,6 +35,14 @@ const config: Config = {
           "35px",
           {
             lineHeight: "1.35",
+            fontWeight: "700",
+          },
+        ],
+        // Responsive Typography Tokens
+        "h-related-mobile": [
+          "25px",
+          {
+            lineHeight: "1.2", // 120%
             fontWeight: "700",
           },
         ],
@@ -153,6 +165,28 @@ const config: Config = {
             fontWeight: "500",
           },
         ],
+        // Markdown Post Content Tokens
+        "markdown-h1": [
+          "21px",
+          {
+            lineHeight: "1.5", // 150%
+            fontWeight: "700",
+          },
+        ],
+        "markdown-p": [
+          "16px",
+          {
+            lineHeight: "1.8", // 180%
+            fontWeight: "400",
+          },
+        ],
+        "markdown-span": [
+          "16px",
+          {
+            lineHeight: "1.8", // 180%
+            fontWeight: "400",
+          },
+        ],
       },
       boxShadow: {
         "hard-black": "10px 10px 0 0 rgba(0, 0, 0, 1)",
@@ -163,9 +197,20 @@ const config: Config = {
         "modal-width": "400px",
         "modal-max-width": "640px",
         "navbar-height": "80px",
+        // Markdown Post Content Spacing
+        "markdown-image": "64px", // Top and bottom margin for images
       },
       borderRadius: {
         chip: "56px",
+      },
+      keyframes: {
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+      },
+      animation: {
+        shimmer: "shimmer 2s ease-in-out infinite",
       },
     },
   },

@@ -37,10 +37,10 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
     ) : null;
 
     return (
-      <div ref={ref} className={clsx("flex flex-col mt-[calc(44px+80px)] mb-16", className)} {...props}>
+      <div ref={ref} className={clsx("flex flex-col mt-[80px] md:mt-[45px]  md:mb-4", className)} {...props}>
         {isPostVariant ? (
           // Post variant: Card with back button inside and custom padding
-          <div className="w-full pt-[38.5px] pb-[38.5px]">
+          <div className="w-full ">
             <Card
               {...card}
               variant="light"
@@ -49,7 +49,7 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
               contentPadding={contentPaddingClasses}
               topContent={backButton}
               hideBadge={true}
-              className="!p-0"
+              className="pt-24 px-6 pb-10 md:pt-[38.5px] md:px-0 md:pb-[38.5px]"
             />
           </div>
         ) : (
@@ -57,7 +57,7 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
           <div className="flex flex-col gap-6">
             {/* Label */}
             {label && (
-              <p className="text-white font-sans text-lg-semibold-tight">
+              <p className="text-white font-sans text-lg-semibold-tight md:block hidden">
                 {label}
               </p>
             )}
@@ -70,7 +70,7 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
                 titleSize="large"
                 maxTitleWidth="557px"
                 contentPadding={contentPaddingClasses}
-                className="!p-0"
+                className="!p-0 !min-h-[348px]"
               />
             </div>
           </div>

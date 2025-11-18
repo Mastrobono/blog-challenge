@@ -135,6 +135,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
             {/* Post Title */}
             <h3
               className={clsx(
+                "line-clamp-6 md:line-clamp-3",
                 {
                   "text-card-title": titleSize === "normal",
                   "text-card-title-large": titleSize === "large",
