@@ -28,7 +28,7 @@ const CTA = React.forwardRef<HTMLDivElement, CTAProps>(
         ref={ref}
         className={clsx(
           "w-full bg-arrow-purple",
-          "flex flex-col items-start gap-10 p-10",
+          "flex flex-col items-start md:gap-10 gap-6 p-10",
           "md:flex-row md:justify-between md:items-center md:gap-[40px] md:px-16 md:py-12",
           className
         )}

@@ -12,7 +12,7 @@ const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
         ref={ref}
         className={clsx(
           "w-full bg-neutral-black",
-          "p-16",
+          "p-6 md:px-16 md:py-16",
           className
         )}
         {...props}

@@ -81,17 +81,27 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     // Mutation for local image upload (when file is selected)
     const imageUploadMutation = useMutation({
       mutationFn: async (file: File) => {
+        console.log("🚀 [Modal] imageUploadMutation.mutate called", {
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+          currentStatus: localUploadStatus,
+        });
+
         // Validate file type before starting upload
         if (!file.type.startsWith("image/")) {
+          console.error("❌ [Modal] Invalid file type in mutation", { fileType: file.type });
           setLocalUploadStatus("failure");
           throw new Error("File must be an image");
         }
 
         setLocalUploadProgress(0);
         setLocalUploadStatus("loading");
+        console.log("📤 [Modal] Upload status set to 'loading'");
         
         // Clear any existing interval
         if (progressIntervalRef.current) {
+          console.log("🧹 [Modal] Clearing existing progress interval");
           clearInterval(progressIntervalRef.current);
           progressIntervalRef.current = null;
         }
@@ -99,12 +109,16 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
         // Simulate progress updates
         return new Promise<File>((resolve, reject) => {
           let progress = 0;
+          console.log("⏳ [Modal] Starting upload progress simulation");
+          
           const progressInterval = setInterval(() => {
             progress += 10;
             setLocalUploadProgress(progress);
+            console.log(`📊 [Modal] Upload progress: ${progress}%`);
             
             // Simulate potential failure at 60%
             if (progress === 60 && Math.random() < 0.2) {
+              console.error("❌ [Modal] Simulated failure at 60%");
               clearInterval(progressInterval);
               progressIntervalRef.current = null;
               setLocalUploadStatus("failure");
@@ -113,10 +127,12 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
             }
             
             if (progress >= 100) {
+              console.log("✅ [Modal] Upload progress reached 100%, processing file...");
               clearInterval(progressInterval);
               progressIntervalRef.current = null;
               mockUploadImageLocal(file)
                 .then((result) => {
+                  console.log("✅ [Modal] Image upload successful", { fileName: result.name });
                   setLocalUploadStatus("success");
                   setUploadedFile(result);
                   // Keep success state for 1 second before resolving
@@ -125,6 +141,7 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
                   }, 1000);
                 })
                 .catch((error) => {
+                  console.error("❌ [Modal] Error in mockUploadImageLocal", error);
                   setLocalUploadStatus("failure");
                   reject(error);
                 });
@@ -132,6 +149,19 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           }, 200);
           
           progressIntervalRef.current = progressInterval;
+        });
+      },
+      onError: (error) => {
+        console.error("❌ [Modal] imageUploadMutation error", {
+          error,
+          errorMessage: error.message,
+          stack: error.stack,
+        });
+      },
+      onSuccess: (result) => {
+        console.log("✅ [Modal] imageUploadMutation success", {
+          fileName: result.name,
+          fileSize: result.size,
         });
       },
     });
@@ -157,27 +187,64 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
 
     // Handle file selection - trigger local upload
     useEffect(() => {
-      if (imageFile && imageFile.length > 0 && localUploadStatus === "idle") {
+      console.log("🔄 [Modal] File selection effect triggered", {
+        hasImageFile: !!(imageFile && imageFile.length > 0),
+        imageFileName: imageFile && imageFile.length > 0 ? imageFile[0].name : null,
+        localUploadStatus,
+        mutationStatus: imageUploadMutation.status,
+        mutationError: imageUploadMutation.error,
+      });
+
+      // Only start upload if:
+      // 1. There's a file selected
+      // 2. Status is idle (not loading, success, or failure)
+      // 3. Mutation is not in error state (prevents auto-retry after failure)
+      if (
+        imageFile && 
+        imageFile.length > 0 && 
+        localUploadStatus === "idle" &&
+        imageUploadMutation.status !== "error"
+      ) {
         const file = imageFile[0];
+        
+        console.log("📤 [Modal] Starting image upload", {
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+        });
         
         // Clear error when file is selected
         setImageError(false);
         
         // Validate file type before starting upload
         if (!file.type.startsWith("image/")) {
+          console.error("❌ [Modal] Invalid file type", { fileType: file.type });
           setLocalUploadStatus("failure");
           setLocalUploadProgress(0);
           return;
         }
         
         imageUploadMutation.mutate(file);
+      } else if (
+        imageFile && 
+        imageFile.length > 0 && 
+        localUploadStatus === "idle" &&
+        imageUploadMutation.status === "error"
+      ) {
+        console.log("⚠️ [Modal] Skipping auto-upload - mutation has error state. User must retry manually.");
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [imageFile, localUploadStatus]);
 
     // Reset local upload state when image is cleared
     useEffect(() => {
+      console.log("🔄 [Modal] Image cleared effect triggered", {
+        hasImageFile: !!(imageFile && imageFile.length > 0),
+        localUploadStatus,
+      });
+
       if (!imageFile || imageFile.length === 0) {
+        console.log("🧹 [Modal] Clearing upload state (image was removed)");
         // Clear progress interval if it exists
         if (progressIntervalRef.current) {
           clearInterval(progressIntervalRef.current);
@@ -250,16 +317,24 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     };
 
     const handleSuccessButtonClick = () => {
-      reset();
-      setIsSuccess(false);
-      setLocalUploadProgress(0);
-      setLocalUploadStatus("idle");
-      setUploadedFile(null);
-      setImageError(false);
-      setSubmitError(null);
-      imageUploadMutation.reset();
-      createPostMutation.reset();
+      console.log("✅ [Modal] Success button clicked, closing modal");
+      // Close modal first, then reset state after animation completes
       onClose?.();
+      
+      // Reset state after a short delay to allow modal close animation to start
+      // This prevents the user from seeing the empty form state
+      setTimeout(() => {
+        console.log("🧹 [Modal] Resetting form state after modal close");
+        reset();
+        setIsSuccess(false);
+        setLocalUploadProgress(0);
+        setLocalUploadStatus("idle");
+        setUploadedFile(null);
+        setImageError(false);
+        setSubmitError(null);
+        imageUploadMutation.reset();
+        createPostMutation.reset();
+      }, 300); // Wait for modal close animation to complete
     };
 
     const handleCancelUpload = () => {
@@ -283,15 +358,18 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     };
 
     const handleRetryUpload = () => {
+      console.log("🔄 [Modal] Retry upload clicked");
       // Reset everything and go back to InputFile state
       // Clear progress interval if it exists
       if (progressIntervalRef.current) {
+        console.log("🧹 [Modal] Clearing progress interval on retry");
         clearInterval(progressIntervalRef.current);
         progressIntervalRef.current = null;
       }
       
       // Cancel the mutation
       imageUploadMutation.reset();
+      console.log("🔄 [Modal] Mutation reset, clearing file input");
       
       // Reset all states
       setLocalUploadProgress(0);
@@ -376,6 +454,7 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
                       }
                     },
                   })}
+                  label="Post Title"
                   placeholder="Post Title"
                   error={errors.title?.message}
                   disabled={isSubmitting}

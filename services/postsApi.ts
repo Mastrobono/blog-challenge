@@ -171,7 +171,9 @@ export async function getRelatedPosts(): Promise<RelatedPost[]> {
   try {
     const response = await fetch(url, {
       method: "GET",
-      cache: "no-store", // Get fresh data
+      // For client-side fetching, let React Query handle caching
+      // Using default cache to allow browser and React Query to optimize
+      cache: "default",
     });
 
     // Log response details

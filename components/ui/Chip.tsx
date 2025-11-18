@@ -34,7 +34,7 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>(
         className={clsx(baseClasses, stateClasses, className)}
         {...props}
       >
-        <span className="text-base-regular align-middle">{children}</span>
+        <span className="text-base-regular align-middle ">{children}</span>
         {variant === "active" && onRemove && (
           <button
             type="button"
@@ -48,7 +48,7 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>(
             <img
               src="/assets/mark-chip.svg"
               alt="Remove"
-              className="w-3 h-3"
+              className="w-4 h-4"
             />
           </button>
         )}

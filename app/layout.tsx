@@ -7,7 +7,6 @@ import { QueryClientProvider } from "@/providers/QueryClientProvider";
 import { LenisProvider } from "@/providers/LenisProvider";
 import { ModalProvider } from "@/contexts/ModalContext";
 import { ModalWrapper } from "@/components/features/ModalWrapper";
-import "@/lib/api-debug"; // Load API debug tools
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",

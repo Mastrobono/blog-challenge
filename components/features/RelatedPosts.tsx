@@ -4,6 +4,7 @@ import React, { useCallback, useMemo } from "react";
 import { clsx } from "clsx";
 import ActionButton from "../ui/ActionButton";
 import Card from "./Card";
+import CardShimmer from "./CardShimmer";
 import { CardProps } from "./Card";
 import { useRelatedPosts } from "@/hooks/useRelatedPosts";
 import { useModal } from "@/contexts/ModalContext";
@@ -33,17 +34,17 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
         imageAlt: post.title,
         postTitle: post.title,
         slug: `post-${post.id}`, // Generate slug from ID
-        readTime: "5 min read", // Default read time, can be updated if API provides it
+        readTime: "5 min", // Default read time, can be updated if API provides it
         badge: post.topic || "General",
         variant: "light" as const,
         titleSize: "normal" as const,
       }));
     }, [posts]);
 
-    // Show loading state
+    // Show loading state with shimmers
     if (isLoading) {
       return (
-        <div ref={ref} className={clsx("flex flex-col gap-[10px]", className)} {...props}>
+        <div ref={ref} className={clsx("flex flex-col gap-[10px] ", className)} {...props}>
           <div className="flex items-center justify-between">
             <h2 className="font-sans text-h-related-tight text-neutral-black">
               Related Posts
@@ -52,8 +53,13 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
               New post
             </ActionButton>
           </div>
-          <div className="text-center py-8 text-neutral-gray-light">
-            Loading posts...
+          {/* Shimmer Cards - 3 cards of equal size */}
+          <div className="flex flex-col md:flex-row gap-[10px]">
+            {[1, 2, 3].map((index) => (
+              <div key={index} className="flex-1" style={{ maxHeight: "378px" }}>
+                <CardShimmer variant="light" className="h-full" />
+              </div>
+            ))}
           </div>
         </div>
       );
@@ -67,7 +73,7 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
         : "";
       
       return (
-        <div ref={ref} className={clsx("flex flex-col gap-[10px]", className)} {...props}>
+        <div ref={ref} className={clsx("flex flex-col gap-[10px] ", className)} {...props}>
           <div className="flex items-center justify-between">
             <h2 className="font-sans text-h-related-tight text-neutral-black">
               Related Posts
@@ -89,7 +95,7 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
     // Show empty state
     if (relatedPosts.length === 0) {
       return (
-        <div ref={ref} className={clsx("flex flex-col gap-[10px]", className)} {...props}>
+        <div ref={ref} className={clsx("flex flex-col gap-[10px] ", className)} {...props}>
           <div className="flex items-center justify-between">
             <h2 className="font-sans text-h-related-tight text-neutral-black">
               Related Posts
@@ -106,10 +112,10 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
     }
 
     return (
-      <div ref={ref} className={clsx("flex flex-col gap-[10px]", className)} {...props}>
+      <div ref={ref} className={clsx("flex flex-col gap-[10px] ", className)} {...props}>
         {/* First Row: Title and ActionButton */}
         <div className="flex items-center justify-between">
-          <h2 className="font-sans text-h-related-tight text-neutral-black">
+          <h2 className="font-sans text-h-related-responsive text-neutral-black">
             Related Posts
           </h2>
           <ActionButton variant="light" onClick={handleNewPostClick}>
@@ -117,13 +123,38 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
           </ActionButton>
         </div>
 
-        {/* Second Row: Post Cards in horizontal layout */}
-        <div className="flex flex-col md:flex-row gap-[10px]">
-          {relatedPosts.map((post, index) => (
-            <div key={post.slug || index} className="flex-1" style={{ maxHeight: "378px" }}>
-              <Card {...post} className="h-full" />
+        {/* Second Row: Post Cards in horizontal scrollable layout */}
+        <div className="pb-2 md:pb-0">
+          {/* Mobile: wrapper with padding so scrollbar starts from content */}
+          <div className="-mx-6 px-6 md:hidden">
+            <div className="overflow-x-auto custom-scrollbar-light pb-3">
+              <div className="flex gap-[10px] min-w-max">
+                {relatedPosts.map((post, index) => (
+                  <div 
+                    key={post.slug || index} 
+                    className="flex-shrink-0 w-[calc(83.33vw-40px)]" 
+                    style={{ maxHeight: "378px" }}
+                  >
+                    <Card {...post} className="h-full" />
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
+          </div>
+          {/* Desktop: no wrapper, scrollbar starts from edge */}
+          <div className="hidden md:block overflow-x-auto custom-scrollbar-light">
+            <div className="flex md:flex-row gap-[10px]">
+              {relatedPosts.map((post, index) => (
+                <div 
+                  key={post.slug || index} 
+                  className="flex-1" 
+                  style={{ maxHeight: "378px" }}
+                >
+                  <Card {...post} className="h-full" />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );

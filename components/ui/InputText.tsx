@@ -69,15 +69,10 @@ const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
 
     // Sync hasValue with actual input value on mount and when props change
     useEffect(() => {
-      if (value !== undefined) {
-        setHasValue(!!value);
-      } else if (defaultValue !== undefined) {
-        setHasValue(!!defaultValue);
-      } else {
-        // For uncontrolled without defaultValue, check ref on mount
-        const refValue = internalRef.current?.value ?? "";
-        setHasValue(!!refValue);
-      }
+      const currentValue = getInputValue();
+      const hasValueNow = !!currentValue && currentValue !== "";
+      setHasValue(hasValueNow);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value, defaultValue]);
 
     // Validate initial value if validateOnChange is enabled
@@ -96,7 +91,23 @@ const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
     const isFilled = hasValue || (!!currentValue && currentValue !== "");
     const isError = !!error;
     const isActive = isFocused && !isError && !disabled;
-    const showLabel = isActive && !disabled; // Label ONLY shows when input is active (focused)
+    // Label shows ONLY when input is active (focused) AND does NOT have a value
+    const showLabel = !!(label && isActive && !isFilled && !disabled);
+    
+    // Debug logs (remove in production)
+    if (process.env.NODE_ENV === 'development' && label) {
+      console.log('🏷️ [InputText] Label state:', {
+        label,
+        hasValue,
+        currentValue: String(currentValue),
+        isFilled,
+        isFocused,
+        isActive,
+        isError,
+        disabled,
+        showLabel,
+      });
+    }
 
     // Base classes - placeholder and written text use text-base-placeholder
     // Add padding-top when label is present and input is active
@@ -125,13 +136,10 @@ const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
         disabled,
     });
 
-    // Label classes - shown when there's a value (filled), with CSS transition
+    // Label classes - shown when there's a value (filled) or active, with CSS transition
     const labelClasses = clsx(
       "absolute left-2 top-2 pointer-events-none text-xs-label text-brand-indigo align-middle transition-all duration-200",
-      {
-        "opacity-0 invisible": !showLabel,
-        "opacity-100 visible": showLabel,
-      }
+      showLabel ? "opacity-100 visible" : "opacity-0 invisible"
     );
 
     // Internal validation function

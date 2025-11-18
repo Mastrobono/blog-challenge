@@ -106,14 +106,6 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
     for (let i = 0; i < displayedPosts.length; i += 3) {
       gridCardSets.push(displayedPosts.slice(i, i + 3));
     }
-    
-    console.log("🎴 GridCard sets:", {
-      totalPosts: filteredPosts.length,
-      displayedPosts: displayedPosts.length,
-      gridCardSetsCount: gridCardSets.length,
-      sets: gridCardSets.map((set, idx) => ({ index: idx, cardsCount: set.length })),
-      hasMore,
-    });
 
     // Determine main card position for each grid (alternating left/right)
     const getMainCardPosition = (index: number): "left" | "right" => {
@@ -164,11 +156,11 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
 
         {/* Load More Button */}
         {gridCardSets.length > 0 && hasMore && (
-          <div className="flex justify-center pt-4">
+          <div className="flex justify-center pb-14 pt-8 md:pt-4">
             <Button
               variant="primary"
               onClick={handleLoadMore}
-              className="!w-auto"
+              className="w-full md:!w-auto"
             >
               Load more
             </Button>

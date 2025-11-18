@@ -17,7 +17,7 @@ const Avatar = React.forwardRef<HTMLImageElement, AvatarProps>(
         alt={alt}
         className={clsx(
           "rounded-full object-cover",
-          size === "default" ? "w-8 h-8" : "w-10 h-10",
+          size === "default" ? "w-8 h-8 md:w-10 md:h-10" : "w-10 h-10 md:w-12 md:h-12",
           className
         )}
         {...props}

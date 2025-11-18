@@ -124,6 +124,20 @@
     line-height: var(--line-height-h-related-tight);
   }
 
+  /* Responsive Related Posts Title */
+  .text-h-related-responsive {
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 768px) {
+    .text-h-related-responsive {
+      font-size: 35px;
+      line-height: 1.2;
+    }
+  }
+
   .text-h-modal {
     font-size: var(--font-size-h-modal);
     font-weight: var(--font-weight-h-modal);
@@ -209,9 +223,15 @@
   }
 
   .text-card-title-large {
-    font-size: var(--font-size-card-title-large);
+    font-size: 25px;
     font-weight: var(--font-weight-card-title-large);
     line-height: var(--line-height-card-title-large);
+  }
+
+  @media (min-width: 768px) {
+    .text-card-title-large {
+      font-size: var(--font-size-card-title-large);
+    }
   }
 
   .text-card-readtime {
@@ -221,10 +241,17 @@
   }
 
   .text-card-author {
-    font-size: var(--font-size-card-author);
+    font-size: 18px;
     font-weight: var(--font-weight-card-author);
     line-height: var(--line-height-card-author);
   }
+
+  @media (min-width: 768px) {
+    .text-card-author {
+      font-size: var(--font-size-card-author);
+    }
+  }
+
 
   .text-xs-label {
     font-size: var(--font-size-xs-label);
@@ -270,5 +297,99 @@
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none; /* Chrome, Safari and Opera */
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .no-scrollbar {
+    -ms-overflow-x: hidden;
+    scrollbar-width: none;
+  }
+
+  /* Custom scrollbar styling */
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #595959;
+    border-radius: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #6b6b6b;
+  }
+  
+  /* Firefox scrollbar */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #595959 rgba(0, 0, 0, 0.9);
+  }
+
+  /* Custom scrollbar light styling */
+  .custom-scrollbar-light::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .custom-scrollbar-light::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
+  
+  .custom-scrollbar-light::-webkit-scrollbar-thumb {
+    background: #8C8C8C;
+    border-radius: 4px;
+  }
+  
+  .custom-scrollbar-light::-webkit-scrollbar-thumb:hover {
+    background: #9C9C9C;
+  }
+  
+  /* Firefox scrollbar light */
+  .custom-scrollbar-light {
+    scrollbar-width: thin;
+    scrollbar-color: #8C8C8C rgba(255, 255, 255, 0.3);
+  }
+
+  /* Custom scrollbar light with padding offset - starts from content padding */
+  .custom-scrollbar-light-offset {
+    scrollbar-width: thin;
+    scrollbar-color: #8C8C8C rgba(255, 255, 255, 0.3);
+  }
+  
+  .custom-scrollbar-light-offset::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .custom-scrollbar-light-offset::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+  
+  .custom-scrollbar-light-offset::-webkit-scrollbar-thumb {
+    background: #8C8C8C;
+    border-radius: 4px;
+  }
+  
+  .custom-scrollbar-light-offset::-webkit-scrollbar-thumb:hover {
+    background: #9C9C9C;
+  }
+  
+  @media (min-width: 768px) {
+    .custom-scrollbar-light-offset::-webkit-scrollbar-track {
+      margin-left: 0;
+      margin-right: 0;
+    }
   }
 }
