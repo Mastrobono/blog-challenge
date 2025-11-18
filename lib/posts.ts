@@ -184,7 +184,7 @@ export async function getRelatedPostsForSSG(): Promise<{ id: number }[]> {
     
     const response = await fetch(url, {
       method: "GET",
-      cache: "no-store", // Always fetch fresh data for SSG
+      next: { revalidate: 3600 }, // Revalidate every hour (compatible with SSG)
     });
 
     if (!response.ok) {
@@ -216,7 +216,7 @@ export async function getRelatedPostById(id: number): Promise<RelatedPost> {
   
   const response = await fetch(url, {
     method: "GET",
-    cache: "no-store", // Always fetch fresh data
+    next: { revalidate: 3600 }, // Revalidate every hour (compatible with SSG)
   });
 
   if (!response.ok) {
