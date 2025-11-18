@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { clsx } from "clsx";
+import { gsap } from "gsap";
 
 export interface ActionButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
@@ -12,6 +13,54 @@ export interface ActionButtonProps extends React.ButtonHTMLAttributes<HTMLButton
 
 const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
   ({ className, children = "Read", variant = "light", arrowColor, onClick, ...props }, ref) => {
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const arrowRef = useRef<SVGSVGElement>(null);
+
+    // Combine refs
+    const combinedRef = React.useCallback(
+      (node: HTMLButtonElement | null) => {
+        buttonRef.current = node;
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node;
+        }
+      },
+      [ref]
+    );
+
+    // Animate arrow on hover
+    useEffect(() => {
+      const button = buttonRef.current;
+      const arrow = arrowRef.current;
+      if (!button || !arrow) return;
+
+      const handleMouseEnter = () => {
+        gsap.to(arrow, {
+          rotation: -25,
+          duration: 0.3,
+          ease: "power2.out",
+          transformOrigin: "center center",
+        });
+      };
+
+      const handleMouseLeave = () => {
+        gsap.to(arrow, {
+          rotation: 0,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      };
+
+      button.addEventListener("mouseenter", handleMouseEnter);
+      button.addEventListener("mouseleave", handleMouseLeave);
+
+      return () => {
+        button.removeEventListener("mouseenter", handleMouseEnter);
+        button.removeEventListener("mouseleave", handleMouseLeave);
+      };
+    }, []);
+
     // Determine arrow color based on variant if not explicitly provided
     // Using token values from CSS variables
     const getArrowColor = () => {
@@ -27,7 +76,7 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
     return (
       <button
         type="button"
-        ref={ref}
+        ref={combinedRef}
         onClick={onClick}
         className={clsx(
           "inline-flex items-center gap-2",
@@ -46,6 +95,7 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
       >
         <span>{children}</span>
         <svg
+          ref={arrowRef}
           width="24"
           height="24"
           viewBox="0 0 24 24"

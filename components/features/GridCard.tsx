@@ -9,11 +9,12 @@ export interface GridCardProps extends React.HTMLAttributes<HTMLDivElement> {
   mainCardPosition?: "left" | "right"; // Position for main card (only used when cards.length === 3 and equalSize is false)
   equalSize?: boolean; // If true, render 3 cards with equal size (only used when cards.length === 3)
   cta?: React.ReactNode; // CTA component to render after cards
+  isFirstGrid?: boolean; // If true, images will load with priority (for first 3 cards)
 }
 
 const GridCard = React.forwardRef<HTMLDivElement, GridCardProps>(
   function GridCard(
-    { className, cards, mainCardPosition = "left", equalSize = false, cta, ...props },
+    { className, cards, mainCardPosition = "left", equalSize = false, cta, isFirstGrid = false, ...props },
     ref
   ) {
     const [currentMainCardPosition, setCurrentMainCardPosition] = useState<"left" | "right">(mainCardPosition);
@@ -28,12 +29,21 @@ const GridCard = React.forwardRef<HTMLDivElement, GridCardProps>(
       return null;
     }
 
+    // Helper to add priority and enable view transition to cards in first grid
+    const addPriorityToCard = (card: CardProps, index: number): CardProps => {
+      const updatedCard = { ...card, enableViewTransition: true };
+      if (isFirstGrid && index < 3) {
+        updatedCard.priority = true;
+      }
+      return updatedCard;
+    };
+
     // 1 card: full width, full height (100% of parent)
     if (cards.length === 1) {
       return (
         <div ref={ref} className={clsx("flex flex-col gap-10", className)} {...props}>
           <div className="w-full h-full md:h-[600px]">
-            <Card {...cards[0]} />
+            <Card {...addPriorityToCard(cards[0], 0)} />
           </div>
           {cta && <div>{cta}</div>}
         </div>
@@ -47,7 +57,7 @@ const GridCard = React.forwardRef<HTMLDivElement, GridCardProps>(
           <div className="w-full md:grid md:grid-cols-2 md:gap-8 md:min-h-[600px]">
             {cards.map((card, index) => (
               <div key={index} className="w-full h-full">
-                <Card {...card} />
+                <Card {...addPriorityToCard(card, index)} />
               </div>
             ))}
           </div>
@@ -64,7 +74,7 @@ const GridCard = React.forwardRef<HTMLDivElement, GridCardProps>(
           <div className="w-full md:grid md:grid-cols-3 md:gap-8 md:items-stretch md:h-full md:min-h-[600px]">
             {cards.map((card, index) => (
               <div key={index} className="flex h-full md:min-h-full">
-                <Card {...card} />
+                <Card {...addPriorityToCard(card, index)} />
               </div>
             ))}
           </div>
@@ -74,8 +84,8 @@ const GridCard = React.forwardRef<HTMLDivElement, GridCardProps>(
     }
 
     // Main card + 2 secondary cards layout
-    const mainCardData = cards[0];
-    const secondaryCards = cards.slice(1);
+    const mainCardData = addPriorityToCard(cards[0], 0);
+    const secondaryCards = cards.slice(1).map((card, index) => addPriorityToCard(card, index + 1));
 
     return (
       <div ref={ref} className={clsx("flex flex-col gap-10", className)} {...props}>

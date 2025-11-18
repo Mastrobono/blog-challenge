@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { clsx } from "clsx";
+import Logo from "../ui/Logo";
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   buttonClick?: React.ReactNode;
@@ -35,11 +36,7 @@ const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
       >
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <img
-            src="/assets/logo.svg"
-            alt="Lite-Tech"
-            className="h-auto"
-          />
+          <Logo className="h-auto" />
         </Link>
 
         {/* Button */}

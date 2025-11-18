@@ -12,13 +12,28 @@ export function useRelatedPosts() {
     queryKey: ["relatedPosts"],
     queryFn: getRelatedPosts,
     staleTime: 1000 * 60 * 5, // 5 minutes - data stays fresh for 5 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes - cache persists for 10 minutes
+    gcTime: 1000 * 60 * 30, // 30 minutes - cache persists longer
     refetchOnWindowFocus: false,
-    refetchOnMount: true, // Always refetch on mount for fresh data
+    refetchOnMount: false, // Don't refetch on mount, use stale data first
     refetchOnReconnect: false,
     retry: 1, // Only retry once on failure
     retryDelay: 500, // Retry after 500ms
+    // Show stale data immediately, then revalidate in background
+    placeholderData: (previousData) => previousData,
   });
+}
+
+/**
+ * Hook to get a single related post by ID from React Query cache
+ * Returns the post if found in cache, undefined otherwise
+ */
+export function useRelatedPostById(id: number): RelatedPost | undefined {
+  const queryClient = useQueryClient();
+  const relatedPosts = queryClient.getQueryData<RelatedPost[]>(["relatedPosts"]);
+  
+  if (!relatedPosts) return undefined;
+  
+  return relatedPosts.find((post) => post.id === id);
 }
 
 /**

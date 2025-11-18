@@ -1,3 +1,49 @@
+# Lite-Tech Challenge - Frontend
+
+A modern, performant blog platform built with Next.js, featuring a component library designed with Atomic Design principles and fully documented in Storybook.
+
+## 📚 Storybook & Component Library
+
+This project includes a comprehensive **Storybook** setup with all components documented and ready for development. All components follow **Atomic Design** principles, making them:
+
+- **Customizable**: Each component accepts props for easy customization
+- **Scalable**: Built to be reused across the application
+- **Well-documented**: Complete Storybook stories for all components
+- **Type-safe**: Full TypeScript support with proper interfaces
+
+### Component Architecture (Atomic Design)
+
+The component structure follows Atomic Design principles:
+
+| **Level** | **Directory** | **Examples** | **Purpose** |
+| --- | --- | --- | --- |
+| **Atoms** | `components/ui/` | `Button`, `Input`, `Badge`, `Avatar`, `Chip` | Basic building blocks, reusable UI elements |
+| **Molecules** | `components/ui/` | `Card`, `ActionButton`, `Logo` | Simple combinations of atoms |
+| **Organisms** | `components/layout/`, `components/features/` | `Navbar`, `Footer`, `Modal` | Complex UI components combining molecules |
+| **Features** | `components/features/` | `Hero`, `RelatedPosts`, `FilteredPosts`, `GridCard` | Complete feature implementations assembled from organisms |
+
+### Running Storybook
+
+```bash
+npm run storybook
+```
+
+Storybook will be available at `http://localhost:6006` where you can:
+- Browse all components
+- Test different variants and props
+- View component documentation
+- Develop components in isolation
+
+### Available Stories
+
+All components have corresponding Storybook stories:
+- **UI Components**: Button, Input, Badge, Avatar, Chip, Card, ActionButton, Logo, etc.
+- **Layout Components**: Navbar, Footer, Container
+- **Feature Components**: Hero, Modal, RelatedPosts, FilteredPosts, GridCard, MostViewedPosts
+- **Special Components**: LoaderScreen, LoaderBar, TextType
+
+---
+
 ## 🏗️ Frontend Architectural Documentation
 
 This document outlines the planned architecture for the frontend application, detailing the technology choices, rendering strategies, component organization, and critical trade-offs.
@@ -252,15 +298,77 @@ export async function generateStaticParams() {
 
 ---
 
-## 🔧 API Configuration & CORS Setup
+## 🔧 Backend API Integration
 
-### Environment Variables
+### Backend Overview
+
+The frontend integrates with a **NestJS** backend API that handles post creation and related posts management.
+
+#### Backend Tech Stack
+
+| **Component** | **Technology** | **Purpose** |
+| --- | --- | --- |
+| **Framework** | NestJS (Node.js with TypeScript) | REST API server |
+| **Database** | PostgreSQL with Prisma ORM | Data persistence |
+| **Image Storage** | Cloudinary | Automatic WebP optimization |
+| **Validation** | class-validator & class-transformer | Input validation |
+| **Deployment** | Render | Production hosting |
+
+#### Backend Architecture
+
+- **Modular REST API** with module-based architecture (Posts, Prisma)
+- **DTOs** for input validation
+- **Services** for business logic
+- **Controllers** for HTTP endpoints
+- **CORS enabled** for frontend integration
+- **Automatic image optimization** (WebP conversion)
+- **Error handling** with timeouts
+- **Type-safe** with TypeScript and Prisma
+
+#### Available Endpoints
+
+| **Method** | **Endpoint** | **Description** | **Request Format** |
+| --- | --- | --- | --- |
+| `POST` | `/api/posts/related` | Create post with image | `multipart/form-data` |
+| `GET` | `/api/posts/related` | Get the 3 most recent posts | - |
+
+**POST Request Format:**
+- **Content-Type**: `multipart/form-data`
+- **Fields**:
+  - `title` (required, max 100 chars)
+  - `topic` (optional, max 50 chars)
+  - `image` (required, jpg/jpeg/png, max 5MB)
+
+**Response Format:**
+- **POST**: `{ message: string, post: Post }`
+- **GET**: `Post[]` (array of posts, max 3 items)
+
+**Data Model (Post):**
+```typescript
+{
+  id: number;
+  title: string;
+  imageUrl: string;
+  topic?: string;
+  createdAt: Date;
+  readTime?: number;
+}
+```
+
+#### Backend URLs
+
+- **Development**: `http://localhost:3001/api`
+- **Production**: `https://litebox-challenge-webservice.onrender.com/api`
+
+### Frontend API Configuration
+
+#### Environment Variables
 
 **Vercel Environment Variables:**
 - `NEXT_PUBLIC_API_URL`: Backend API URL (must include `/api` suffix)
   - Production: `https://litebox-challenge-webservice.onrender.com/api`
 
-### CORS Configuration
+#### CORS Configuration
 
 The backend must be configured to allow requests from your Vercel deployment domain.
 
@@ -280,8 +388,6 @@ app.enableCors({
 
 **Render Environment Variable:**
 - `FRONTEND_URL`: Your Vercel deployment URL (e.g., `https://lite-tech-challenge-kappa.vercel.app`)
-
-See `CORS_SETUP.md` for detailed CORS configuration instructions.
 
 ---
 

@@ -5,6 +5,7 @@ import { FilteredPostsProvider, FilterChipsContent, FilteredPostsContent } from 
 import { getMostRecentPost, getAllPosts, extractUniqueTopics, getMostViewedPosts } from "@/lib/posts";
 import { mapApiPostToCardProps } from "@/lib/posts";
 import Footer from "@/components/layout/Footer";
+import HomePageWithLoader from "@/components/features/HomePageWithLoader";
 
 export default async function HomePage() {
   // Fetch data in Server Component
@@ -23,8 +24,8 @@ export default async function HomePage() {
   const initialPosts = allPosts.slice(0, 9);
 
   return (
-
-    <Container>
+    <HomePageWithLoader>
+      <Container>
 
       {
         mostRecentPost && (
@@ -43,7 +44,7 @@ export default async function HomePage() {
         </div>
 
         {/* Two Column Layout */}
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col md:flex-row gap-8">
           {/* Left Column: GridCards + CTA */}
           <div className="flex-1 flex flex-col">
             <FilteredPostsContent
@@ -53,7 +54,7 @@ export default async function HomePage() {
           </div>
 
           {/* Right Column: Most Viewed Posts (Fixed) */}
-          <aside className="w-full md:block hidden md:w-[300px] md:sticky md:top-[100px] md:self-start md:max-h-[calc(100vh-100px)] md:overflow-y-auto">
+          <aside className="w-full lg:block hidden md:w-[300px] md:sticky md:top-[100px] md:self-start md:max-h-[calc(100vh-100px)] md:overflow-y-auto">
             <MostViewedPosts posts={mostViewedPosts} variant="dark" />
           </aside>
         </div>
@@ -61,6 +62,7 @@ export default async function HomePage() {
 
       {/* Footer outside columns */}
       <Footer />
-    </Container>
+      </Container>
+    </HomePageWithLoader>
   );
 }

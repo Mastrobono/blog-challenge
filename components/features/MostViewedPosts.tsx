@@ -3,6 +3,7 @@
 import React from "react";
 import { clsx } from "clsx";
 import ViewedPost from "../ui/ViewedPost";
+import { useFiltersOptional } from "@/contexts/FilterContext";
 
 export interface MostViewedPost {
   id: number;
@@ -18,13 +19,23 @@ export interface MostViewedPostsProps extends React.HTMLAttributes<HTMLDivElemen
 
 const MostViewedPosts = React.forwardRef<HTMLDivElement, MostViewedPostsProps>(
   function MostViewedPosts({ className, posts, variant = "dark", ...props }, ref) {
+    const filterContext = useFiltersOptional();
+    const hasLoadMoreButton = filterContext?.hasLoadMoreButton ?? false;
+    
+    // Calculate padding to align with last card
+    // Base: pb-14 (3.5rem = 56px) from FilteredPosts container
+    // With button: gap-10 (2.5rem = 40px) + pt-8/pt-4 (2rem/1rem = 32px/16px) + button height (3.5rem = 56px) + pb-14 (3.5rem = 56px)
+    const paddingBottom = hasLoadMoreButton 
+      ? "pb-[184px] md:pb-[168px]" // Total: 184px mobile / 168px desktop
+      : "pb-14"; // 3.5rem = 56px
+    
     return (
-      <div ref={ref} className={clsx("flex flex-col", className)} {...props}>
+      <div ref={ref} className={clsx("flex flex-col", paddingBottom, className)} {...props}>
 
         <p
           className={clsx(
             "font-sans mb-6 text-lg-semibold-tight",
-            variant === "dark" ? "text-neutral-gray-light" : "text-neutral-black"
+            variant === "dark" ? "text-neutral-white" : "text-neutral-black"
           )}
         >
           Most viewed

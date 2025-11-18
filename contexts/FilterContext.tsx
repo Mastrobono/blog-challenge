@@ -11,6 +11,8 @@ interface FilterContextType {
   updateChips: (chips: FilterChipItem[]) => void;
   mainCardPosition: "left" | "right";
   toggleMainCardPosition: () => void;
+  hasLoadMoreButton: boolean;
+  setHasLoadMoreButton: (hasButton: boolean) => void;
 }
 
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
@@ -29,6 +31,7 @@ export function FilterProvider({
   const [chips, setChips] = useState<FilterChipItem[]>(initialChips);
   const [activeFilters, setActiveFilters] = useState<string[]>(initialActiveFilters);
   const [mainCardPosition, setMainCardPosition] = useState<"left" | "right">("left");
+  const [hasLoadMoreButton, setHasLoadMoreButton] = useState<boolean>(false);
 
   const updateChips = useCallback((newChips: FilterChipItem[]) => {
     setChips(newChips);
@@ -87,6 +90,8 @@ export function FilterProvider({
         updateChips,
         mainCardPosition,
         toggleMainCardPosition,
+        hasLoadMoreButton,
+        setHasLoadMoreButton,
       }}
     >
       {children}
@@ -99,6 +104,11 @@ export function useFilters() {
   if (context === undefined) {
     throw new Error("useFilters must be used within a FilterProvider");
   }
+  return context;
+}
+
+export function useFiltersOptional() {
+  const context = useContext(FilterContext);
   return context;
 }
 

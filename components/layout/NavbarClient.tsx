@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Navbar from "./Navbar";
 import ActionButton from "../ui/ActionButton";
 import { useModal } from "@/contexts/ModalContext";

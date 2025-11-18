@@ -4,6 +4,7 @@
  */
 
 import { fetchPosts, fetchPostById, ApiPost } from "@/services/api";
+import { RelatedPost } from "@/services/postsApi";
 import { CardProps } from "@/components/features/Card";
 import { MostViewedPost } from "@/components/features/MostViewedPosts";
 
@@ -163,5 +164,90 @@ export async function getMostViewedPosts(): Promise<MostViewedPost[]> {
     sort: "publishedAt:asc", // Oldest first (ascending order)
   });
   return response.data.map(mapApiPostToMostViewedPost);
+}
+
+/**
+ * Fetch related posts from NestJS backend (for server-side)
+ * Returns posts with IDs that will be used with "related-" prefix
+ */
+export async function getRelatedPostsForSSG(): Promise<{ id: number }[]> {
+  try {
+    // Ensure API_BASE_URL always ends with /api (same logic as postsApi.ts)
+    const envUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+    const API_BASE_URL = envUrl.endsWith("/api") 
+      ? envUrl 
+      : envUrl.endsWith("/") 
+        ? `${envUrl}api` 
+        : `${envUrl}/api`;
+    
+    const url = `${API_BASE_URL}/posts/related`;
+    
+    const response = await fetch(url, {
+      method: "GET",
+      next: { revalidate: 3600 }, // Revalidate every hour (compatible with SSG)
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch related posts: ${response.status}`);
+      return [];
+    }
+
+    const posts = await response.json();
+    return Array.isArray(posts) ? posts.map((post: any) => ({ id: post.id })) : [];
+  } catch (error) {
+    console.error("Error fetching related posts for SSG:", error);
+    return [];
+  }
+}
+
+/**
+ * Fetch a single related post by ID from NestJS backend
+ */
+export async function getRelatedPostById(id: number): Promise<RelatedPost> {
+  // Ensure API_BASE_URL always ends with /api
+  const envUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+  const API_BASE_URL = envUrl.endsWith("/api") 
+    ? envUrl 
+    : envUrl.endsWith("/") 
+      ? `${envUrl}api` 
+      : `${envUrl}/api`;
+  
+  const url = `${API_BASE_URL}/posts/related/${id}`;
+  
+  const response = await fetch(url, {
+    method: "GET",
+    next: { revalidate: 3600 }, // Revalidate every hour (compatible with SSG)
+  });
+
+  if (!response.ok) {
+    // If 404, the post doesn't exist - this is expected for some posts
+    if (response.status === 404) {
+      const error = new Error(`Related post with ID ${id} not found`);
+      (error as any).status = 404;
+      throw error;
+    }
+    const errorText = await response.text();
+    console.error("API Error:", response.status, errorText);
+    throw new Error(`Failed to fetch related post: ${response.status} ${response.statusText}`);
+  }
+
+  const post = await response.json();
+  return post;
+}
+
+/**
+ * Map RelatedPost to CardProps format
+ */
+export function mapRelatedPostToCardProps(post: RelatedPost): CardProps {
+  return {
+    imageSrc: post.imageUrl,
+    imageAlt: post.title,
+    postTitle: post.title,
+    slug: `related-${post.id}`,
+    readTime: "5 min", // Default read time
+    badge: post.topic || "General",
+    variant: "light" as const,
+    titleSize: "large" as const,
+  };
 }
 
