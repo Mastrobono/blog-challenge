@@ -41,7 +41,7 @@ const FilterChips = React.forwardRef<HTMLDivElement, FilterChipsProps>(
           ref={ref}
           className={clsx(
             "w-full",
-            "flex md:flex-row items-center flex-col gap-6 mt-8 md:mt-10",
+            "flex md:flex-row md:items-center flex-col gap-6 mt-8 md:mt-10",
             className
           )}
           {...props}

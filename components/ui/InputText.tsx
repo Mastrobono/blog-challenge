@@ -93,21 +93,6 @@ const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
     const isActive = isFocused && !isError && !disabled;
     // Label shows ONLY when input is active (focused) AND does NOT have a value
     const showLabel = !!(label && isActive && !isFilled && !disabled);
-    
-    // Debug logs (remove in production)
-    if (process.env.NODE_ENV === 'development' && label) {
-      console.log('🏷️ [InputText] Label state:', {
-        label,
-        hasValue,
-        currentValue: String(currentValue),
-        isFilled,
-        isFocused,
-        isActive,
-        isError,
-        disabled,
-        showLabel,
-      });
-    }
 
     // Base classes - placeholder and written text use text-base-placeholder
     // Add padding-top when label is present and input is active

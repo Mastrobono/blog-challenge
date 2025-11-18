@@ -5,6 +5,7 @@ import { FilteredPostsProvider, FilterChipsContent, FilteredPostsContent } from 
 import { getMostRecentPost, getAllPosts, extractUniqueTopics, getMostViewedPosts } from "@/lib/posts";
 import { mapApiPostToCardProps } from "@/lib/posts";
 import Footer from "@/components/layout/Footer";
+import HomePageWithLoader from "@/components/features/HomePageWithLoader";
 
 export default async function HomePage() {
   // Fetch data in Server Component
@@ -23,8 +24,8 @@ export default async function HomePage() {
   const initialPosts = allPosts.slice(0, 9);
 
   return (
-
-    <Container>
+    <HomePageWithLoader>
+      <Container>
 
       {
         mostRecentPost && (
@@ -61,6 +62,7 @@ export default async function HomePage() {
 
       {/* Footer outside columns */}
       <Footer />
-    </Container>
+      </Container>
+    </HomePageWithLoader>
   );
 }

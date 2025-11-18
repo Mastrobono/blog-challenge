@@ -7,6 +7,7 @@ export { default as Avatar } from "./Avatar";
 export { default as LoaderBar } from "./LoaderBar";
 export { default as ActionButton } from "./ActionButton";
 export { default as SocialMedia } from "./SocialMedia";
+export { default as LoaderScreen } from "./LoaderScreen";
 
 export type { ButtonProps } from "./Button";
 export type { InputTextProps } from "./InputText";

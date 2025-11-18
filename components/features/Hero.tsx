@@ -50,6 +50,7 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
               topContent={backButton}
               hideBadge={true}
               priority={true}
+              enableViewTransition={true}
               className="pt-24 px-6 pb-10 md:pt-[38.5px] md:px-0 md:pb-[38.5px]"
             />
           </div>
@@ -58,9 +59,11 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
           <div className="flex flex-col gap-6">
             {/* Label */}
             {label && (
-              <p className="text-white font-sans text-lg-semibold-tight md:block hidden">
-                {label}
-              </p>
+              <div className="text-white font-sans text-lg-semibold-tight md:block hidden">
+                <p className="text-white font-sans text-lg-semibold-tight">
+                  {label}
+                </p>
+              </div>
             )}
 
             {/* Card Container */}
@@ -72,6 +75,7 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
                 maxTitleWidth="557px"
                 contentPadding={contentPaddingClasses}
                 priority={true}
+                enableViewTransition={true}
                 className="!p-0 !min-h-[348px] md:!min-h-0"
               />
             </div>

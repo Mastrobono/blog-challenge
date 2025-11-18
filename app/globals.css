@@ -98,6 +98,15 @@
   body {
     @apply font-sans antialiased;
   }
+
+  /* View Transitions support */
+  @supports (view-transition-name: none) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.3s;
+      animation-timing-function: ease-in-out;
+    }
+  }
 }
 
 @layer components {

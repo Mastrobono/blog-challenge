@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { Link } from "next-view-transitions";
 import { clsx } from "clsx";
 import Badge from "../ui/Badge";
 import Avatar from "../ui/Avatar";
 import ActionButton from "../ui/ActionButton";
+import { useViewTransition } from "@/contexts/ViewTransitionContext";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   imageSrc: string;
@@ -27,6 +28,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   topContent?: React.ReactNode; // Content to render at the top of the content overlay
   hideBadge?: boolean; // Hide badge when avatar is present (for post variant)
   priority?: boolean; // High priority loading for hero/first cards
+  enableViewTransition?: boolean; // Enable view transition name (only for GridCard and Hero)
   onReadClick?: (slug: string) => void;
 }
 
@@ -48,6 +50,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       topContent,
       hideBadge = false,
       priority = false,
+      enableViewTransition = false,
       onReadClick,
       ...props
     },
@@ -56,10 +59,36 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const hasBadge = !!badge && !hideBadge;
     const hasAvatar = !!avatar;
     const hasActionButton = hasBadge && !hasAvatar;
+    const { registerViewTransitionName } = useViewTransition();
+    const [viewTransitionName, setViewTransitionName] = useState<string | undefined>(undefined);
+    const [isImageLoaded, setIsImageLoaded] = useState(false);
 
-    // Extract post ID from slug (format: "post-123" or "related-post-1")
-    const postId = slug.replace("post-", "").replace("related-post-", "");
-    const postUrl = `/post/${postId}`;
+    // Reset image loaded state when imageSrc changes
+    useEffect(() => {
+      setIsImageLoaded(false);
+    }, [imageSrc]);
+
+    // Extract post ID from slug (format: "post-123" or "related-123")
+    // Keep the full slug for the URL to maintain the prefix
+    const postUrl = `/post/${slug}`;
+    
+    // Extract numeric ID for view transition name (remove both prefixes)
+    const numericId = slug.replace(/^(post-|related-)/, "");
+    
+    // Apply view-transition-name only on client-side to avoid hydration mismatch
+    // Only if explicitly enabled (GridCard and Hero) and in two cases:
+    // 1. Cards with "Read" button (hasActionButton) - for transition from listing to post page
+    // 2. Cards in post page (hasAvatar && hideBadge) - for transition destination
+    // Use context to ensure only one image per postId has the transition name on each page
+    useEffect(() => {
+      if (typeof window === "undefined") return;
+      
+      const isPostPage = hasAvatar && hideBadge;
+      if (enableViewTransition && (hasActionButton || isPostPage)) {
+        const name = registerViewTransitionName(numericId);
+        setViewTransitionName(name);
+      }
+    }, [enableViewTransition, hasActionButton, hasAvatar, hideBadge, numericId, registerViewTransitionName]);
 
     return (
       <div
@@ -78,15 +107,32 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         {...props}
       >
         {/* Background Image */}
-        <div className="absolute inset-0 ">
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Placeholder/Skeleton while loading - only for non-priority images */}
+          {!priority && !isImageLoaded && (
+            <div className="absolute inset-0 bg-neutral-black" />
+          )}
           <Image
             src={imageSrc}
             alt={imageAlt}
             fill
-            className="object-cover md:min-h-0"
+            className={clsx(
+              "object-cover md:min-h-0",
+              priority 
+                ? "opacity-100" // Priority images should be visible immediately for LCP
+                : clsx(
+                    "transition-opacity duration-500 ease-in-out",
+                    isImageLoaded ? "opacity-100" : "opacity-0"
+                  )
+            )}
             priority={priority}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes={priority ? "(max-width: 768px) calc(100vw - 48px), calc(100vw - 128px)" : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
             quality={85}
+            onLoad={() => setIsImageLoaded(true)}
+            onError={() => setIsImageLoaded(true)} // Still show image even if error
+            style={{
+              viewTransitionName: viewTransitionName,
+            }}
           />
         </div>
 

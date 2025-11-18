@@ -24,6 +24,19 @@ export function useRelatedPosts() {
 }
 
 /**
+ * Hook to get a single related post by ID from React Query cache
+ * Returns the post if found in cache, undefined otherwise
+ */
+export function useRelatedPostById(id: number): RelatedPost | undefined {
+  const queryClient = useQueryClient();
+  const relatedPosts = queryClient.getQueryData<RelatedPost[]>(["relatedPosts"]);
+  
+  if (!relatedPosts) return undefined;
+  
+  return relatedPosts.find((post) => post.id === id);
+}
+
+/**
  * Hook to create a post and invalidate related posts query
  */
 export function useCreatePost() {

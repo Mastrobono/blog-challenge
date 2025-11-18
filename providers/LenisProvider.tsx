@@ -19,7 +19,7 @@ export function LenisProvider({ children }: LenisProviderProps) {
 
   useEffect(() => {
     const lenis = lenisRef.current?.lenis;
-
+    
     if (lenis) {
       // Sync Lenis with GSAP ticker
       function update(time: number) {

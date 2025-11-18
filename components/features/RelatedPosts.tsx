@@ -9,14 +9,19 @@ import { CardProps } from "./Card";
 import { useRelatedPosts } from "@/hooks/useRelatedPosts";
 import { useModal } from "@/contexts/ModalContext";
 
-export interface RelatedPostsProps extends React.HTMLAttributes<HTMLDivElement> {}
+export interface RelatedPostsProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Post ID to exclude from the list (current post)
+   */
+  excludePostId?: number;
+}
 
 /**
  * RelatedPosts Component
  * Fetches and displays the last 3 posts using React Query
  */
 const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
-  function RelatedPosts({ className, ...props }, ref) {
+  function RelatedPosts({ className, excludePostId, ...props }, ref) {
     const { openModal } = useModal();
     const { data: posts, isLoading, isFetching, error } = useRelatedPosts();
 
@@ -25,21 +30,26 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
       openModal();
     }, [openModal]);
 
-    // Transform API posts to CardProps
+    // Transform API posts to CardProps and filter out current post
     const relatedPosts: CardProps[] = useMemo(() => {
       if (!posts || posts.length === 0) return [];
 
-      return posts.slice(0, 3).map((post) => ({
+      // Filter out the current post if excludePostId is provided
+      const filteredPosts = excludePostId 
+        ? posts.filter((post) => post.id !== excludePostId)
+        : posts;
+
+      return filteredPosts.slice(0, 3).map((post) => ({
         imageSrc: post.imageUrl,
         imageAlt: post.title,
         postTitle: post.title,
-        slug: `post-${post.id}`, // Generate slug from ID
+        slug: `related-${post.id}`, // Generate slug with related prefix to differentiate from API posts
         readTime: "5 min", // Default read time, can be updated if API provides it
         badge: post.topic || "General",
         variant: "light" as const,
         titleSize: "normal" as const,
       }));
-    }, [posts]);
+    }, [posts, excludePostId]);
 
     // Show loading state with shimmers only if no data exists (initial load)
     // If data exists but isFetching, show stale data (background revalidation)

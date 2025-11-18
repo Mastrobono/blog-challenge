@@ -29,12 +29,13 @@ const GridCard = React.forwardRef<HTMLDivElement, GridCardProps>(
       return null;
     }
 
-    // Helper to add priority to cards in first grid
+    // Helper to add priority and enable view transition to cards in first grid
     const addPriorityToCard = (card: CardProps, index: number): CardProps => {
+      const updatedCard = { ...card, enableViewTransition: true };
       if (isFirstGrid && index < 3) {
-        return { ...card, priority: true };
+        updatedCard.priority = true;
       }
-      return card;
+      return updatedCard;
     };
 
     // 1 card: full width, full height (100% of parent)

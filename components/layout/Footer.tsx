@@ -3,6 +3,7 @@
 import React from "react";
 import { clsx } from "clsx";
 import SocialMedia from "../ui/SocialMedia";
+import Logo from "../ui/Logo";
 
 export interface FooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -23,11 +24,7 @@ const Footer = React.forwardRef<HTMLDivElement, FooterProps>(
         <div className="flex flex-col items-center gap-[56px] md:flex-row md:items-center md:justify-between md:gap-10 md:w-full">
           {/* Logo */}
           <div className="flex items-center">
-            <img
-              src="/assets/logo.svg"
-              alt="Lite-Tech"
-              className="h-auto"
-            />
+            <Logo animate={false} className="h-auto" />
           </div>
 
           {/* Social Media */}

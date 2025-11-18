@@ -125,7 +125,7 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
         normalText="Sign up for our newsletter"
         semiboldText="and get daily updates"
         buttonText="Subscribe"
-        onSubscribe={() => console.log("Subscribe clicked")}
+        onSubscribe={() => {}}
       />
     );
 

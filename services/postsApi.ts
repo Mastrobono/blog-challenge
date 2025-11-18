@@ -16,15 +16,6 @@ const getApiBaseUrl = () => {
 
 const API_BASE_URL = getApiBaseUrl();
 
-// Log API configuration on module load (always, for debugging)
-if (typeof window !== "undefined") {
-  console.log("🔧 API Configuration:", {
-    API_BASE_URL,
-    envVar: process.env.NEXT_PUBLIC_API_URL || "(not set, using default)",
-    environment: process.env.NODE_ENV,
-  });
-}
-
 export interface RelatedPost {
   id: number;
   title: string;
@@ -56,42 +47,12 @@ export async function createPost(data: CreatePostData): Promise<CreatePostRespon
   formData.append("image", data.image);
 
   const url = `${API_BASE_URL}/posts/related`;
-  
-  // Log request details for debugging
-  console.group("🚀 POST Request - Create Post");
-  console.log("URL:", url);
-  console.log("Method: POST");
-  console.log("Title:", data.title);
-  console.log("Topic:", data.topic || "(none)");
-  console.log("Image:", {
-    name: data.image.name,
-    type: data.image.type,
-    size: `${(data.image.size / 1024).toFixed(2)} KB`,
-  });
-  
-  // Log FormData contents (for debugging)
-  const formDataEntries: Array<[string, string | File]> = [];
-  formData.forEach((value, key) => {
-    formDataEntries.push([key, value]);
-  });
-  console.log("FormData entries:", formDataEntries.map(([key, value]) => {
-    if (value instanceof File) {
-      return `${key}: File(${value.name}, ${value.type}, ${value.size} bytes)`;
-    }
-    return `${key}: ${value}`;
-  }));
-  console.groupEnd();
 
   try {
     const response = await fetch(url, {
       method: "POST",
       body: formData,
     });
-
-    // Log response details
-    console.group("📥 Response - Create Post");
-    console.log("Status:", response.status, response.statusText);
-    console.log("Headers:", Object.fromEntries(response.headers.entries()));
 
     if (!response.ok) {
       let errorData;
@@ -124,8 +85,6 @@ export async function createPost(data: CreatePostData): Promise<CreatePostRespon
       console.error("Response Headers:", Object.fromEntries(response.headers.entries()));
       console.error("Request URL:", url);
       
-      console.groupEnd();
-      
       // Create more detailed error message
       const errorMessage = errorData.message || errorData.error || `Error ${response.status}: ${response.statusText}`;
       const detailedError = new Error(errorMessage);
@@ -136,12 +95,9 @@ export async function createPost(data: CreatePostData): Promise<CreatePostRespon
     }
 
     const result = await response.json();
-    console.log("Success Response:", result);
-    console.groupEnd();
     return result;
   } catch (error) {
     console.error("❌ Request Failed:", error);
-    console.groupEnd();
     
     // Handle CORS and network errors specifically
     if (error instanceof TypeError && error.message === "Failed to fetch") {
@@ -161,12 +117,6 @@ export async function createPost(data: CreatePostData): Promise<CreatePostRespon
  */
 export async function getRelatedPosts(): Promise<RelatedPost[]> {
   const url = `${API_BASE_URL}/posts/related`;
-  
-  // Log request details for debugging
-  console.group("🚀 GET Request - Related Posts");
-  console.log("URL:", url);
-  console.log("Method: GET");
-  console.groupEnd();
 
   try {
     const response = await fetch(url, {
@@ -175,11 +125,6 @@ export async function getRelatedPosts(): Promise<RelatedPost[]> {
       // Using default cache to allow browser and React Query to optimize
       cache: "default",
     });
-
-    // Log response details
-    console.group("📥 Response - Related Posts");
-    console.log("Status:", response.status, response.statusText);
-    console.log("Headers:", Object.fromEntries(response.headers.entries()));
 
     if (!response.ok) {
       let errorData;
@@ -212,8 +157,6 @@ export async function getRelatedPosts(): Promise<RelatedPost[]> {
       console.error("Response Headers:", Object.fromEntries(response.headers.entries()));
       console.error("Request URL:", url);
       
-      console.groupEnd();
-      
       // Create more detailed error message
       const errorMessage = errorData.message || errorData.error || `Error ${response.status}: ${response.statusText}`;
       const detailedError = new Error(errorMessage);
@@ -224,13 +167,9 @@ export async function getRelatedPosts(): Promise<RelatedPost[]> {
     }
 
     const result = await response.json();
-    console.log("Success Response:", result);
-    console.log("Posts count:", Array.isArray(result) ? result.length : "N/A");
-    console.groupEnd();
     return result;
   } catch (error) {
     console.error("❌ Request Failed:", error);
-    console.groupEnd();
     
     // Handle CORS and network errors specifically
     if (error instanceof TypeError && error.message === "Failed to fetch") {
