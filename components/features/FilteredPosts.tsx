@@ -107,6 +107,13 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
       gridCardSets.push(displayedPosts.slice(i, i + 3));
     }
 
+    // Update context with load more button state
+    const { setHasLoadMoreButton } = useFilters();
+    useEffect(() => {
+      const hasButton = displayedPosts.length > 0 && hasMore;
+      setHasLoadMoreButton(hasButton);
+    }, [displayedPosts.length, hasMore, setHasLoadMoreButton]);
+
     // Determine main card position for each grid (alternating left/right)
     const getMainCardPosition = (index: number): "left" | "right" => {
       return index % 2 === 0 ? "left" : "right";
@@ -123,7 +130,7 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
     );
 
     return (
-      <div ref={ref} className={clsx("flex flex-col gap-10", className)} {...props}>
+      <div ref={ref} className={clsx("flex flex-col gap-10 pb-14", className)} {...props}>
         {/* Filter Chips */}
         {!hideFilterChips && (
           <FilterChips
@@ -141,6 +148,8 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
               const position = getMainCardPosition(index);
               // Show CTA only after the first GridCard (max 3 cards)
               const showCTA = index === 0;
+              // First grid gets priority loading for images
+              const isFirstGrid = index === 0;
               
               return (
                 <GridCard
@@ -148,6 +157,7 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
                   cards={cardSet}
                   mainCardPosition={position}
                   cta={showCTA ? ctaComponent : undefined}
+                  isFirstGrid={isFirstGrid}
                 />
               );
             })}
@@ -156,7 +166,7 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
 
         {/* Load More Button */}
         {gridCardSets.length > 0 && hasMore && (
-          <div className="flex justify-center pb-14 pt-8 md:pt-4">
+          <div className="flex justify-center pt-8 md:pt-4">
             <Button
               variant="primary"
               onClick={handleLoadMore}

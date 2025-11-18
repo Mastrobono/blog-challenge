@@ -18,7 +18,7 @@ export interface RelatedPostsProps extends React.HTMLAttributes<HTMLDivElement> 
 const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
   function RelatedPosts({ className, ...props }, ref) {
     const { openModal } = useModal();
-    const { data: posts, isLoading, error } = useRelatedPosts();
+    const { data: posts, isLoading, isFetching, error } = useRelatedPosts();
 
     // Handle new post click - open modal
     const handleNewPostClick = useCallback(() => {
@@ -41,8 +41,9 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
       }));
     }, [posts]);
 
-    // Show loading state with shimmers
-    if (isLoading) {
+    // Show loading state with shimmers only if no data exists (initial load)
+    // If data exists but isFetching, show stale data (background revalidation)
+    if (isLoading && !posts) {
       return (
         <div ref={ref} className={clsx("flex flex-col gap-[10px] ", className)} {...props}>
           <div className="flex items-center justify-between">

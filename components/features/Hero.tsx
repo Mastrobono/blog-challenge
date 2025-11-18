@@ -49,6 +49,7 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
               contentPadding={contentPaddingClasses}
               topContent={backButton}
               hideBadge={true}
+              priority={true}
               className="pt-24 px-6 pb-10 md:pt-[38.5px] md:px-0 md:pb-[38.5px]"
             />
           </div>
@@ -70,7 +71,8 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
                 titleSize="large"
                 maxTitleWidth="557px"
                 contentPadding={contentPaddingClasses}
-                className="!p-0 !min-h-[348px]"
+                priority={true}
+                className="!p-0 !min-h-[348px] md:!min-h-0"
               />
             </div>
           </div>

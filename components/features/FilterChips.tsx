@@ -41,18 +41,18 @@ const FilterChips = React.forwardRef<HTMLDivElement, FilterChipsProps>(
           ref={ref}
           className={clsx(
             "w-full",
-            "flex md:flex-row flex-col gap-6 mt-8 md:mt-10",
+            "flex md:flex-row items-center flex-col gap-6 mt-8 md:mt-10",
             className
           )}
           {...props}
         >
         {/* Title */}
-        <h2 className="text-lg-bold font-sans text-white">
+        <h2 className="text-lg-bold font-sans text-white h-max ">
           {title}
         </h2>
 
         {/* Chips Container - Full width with horizontal scroll */}
-        <div className="w-full overflow-x-auto overflow-y-hidden custom-scrollbar pb-3 ">
+        <div className="w-full overflow-x-auto overflow-y-hidden custom-scrollbar py-3 ">
           <div className="flex items-center gap-2 min-w-max">
           {/* "All" Chip - Always first */}
           {isAllActive ? (

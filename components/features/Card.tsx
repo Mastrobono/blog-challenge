@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { clsx } from "clsx";
 import Badge from "../ui/Badge";
 import Avatar from "../ui/Avatar";
@@ -25,6 +26,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   contentPadding?: string; // Custom padding for content overlay (e.g., "px-6 pt-[174px] pb-10")
   topContent?: React.ReactNode; // Content to render at the top of the content overlay
   hideBadge?: boolean; // Hide badge when avatar is present (for post variant)
+  priority?: boolean; // High priority loading for hero/first cards
   onReadClick?: (slug: string) => void;
 }
 
@@ -45,6 +47,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       contentPadding,
       topContent,
       hideBadge = false,
+      priority = false,
       onReadClick,
       ...props
     },
@@ -76,15 +79,24 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       >
         {/* Background Image */}
         <div className="absolute inset-0 ">
-          <img
+          <Image
             src={imageSrc}
             alt={imageAlt}
-            className="w-full h-full object-cover  md:min-h-0"
+            fill
+            className="object-cover md:min-h-0"
+            priority={priority}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            quality={85}
           />
         </div>
 
+        {/* Dark Overlay for better contrast (only for post variant) */}
+        {variant === "light" && (
+          <div className="absolute inset-0 bg-black/1 z-10" />
+        )}
+
         {/* Content Overlay */}
-        <div className={clsx("relative mt-auto flex flex-col", contentPadding || "px-6 pt-6 pb-3")}>
+        <div className={clsx("relative mt-auto flex flex-col z-20", contentPadding || "px-6 pt-6 pb-3")}>
           {/* Top Content (e.g., Back Button) */}
           {topContent && (
             <div className="mb-6">

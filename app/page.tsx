@@ -43,7 +43,7 @@ export default async function HomePage() {
         </div>
 
         {/* Two Column Layout */}
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col md:flex-row gap-8">
           {/* Left Column: GridCards + CTA */}
           <div className="flex-1 flex flex-col">
             <FilteredPostsContent
@@ -53,7 +53,7 @@ export default async function HomePage() {
           </div>
 
           {/* Right Column: Most Viewed Posts (Fixed) */}
-          <aside className="w-full md:block hidden md:w-[300px] md:sticky md:top-[100px] md:self-start md:max-h-[calc(100vh-100px)] md:overflow-y-auto">
+          <aside className="w-full lg:block hidden md:w-[300px] md:sticky md:top-[100px] md:self-start md:max-h-[calc(100vh-100px)] md:overflow-y-auto">
             <MostViewedPosts posts={mostViewedPosts} variant="dark" />
           </aside>
         </div>

@@ -53,6 +53,7 @@ export default async function PostPage({
             {/* Hero Section - Outside Container */}
             <Hero
                 variant="post"
+                className="!mt-0"
                 card={mapApiPostToCardProps(post, { includeAvatar: true })}
                 showBackButton={true}
             />
