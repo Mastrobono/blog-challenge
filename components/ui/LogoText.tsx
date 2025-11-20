@@ -20,7 +20,7 @@ const LogoText = React.forwardRef<HTMLDivElement, LogoTextProps>(
       <div
         ref={ref}
         className={clsx(
-          "font-sans text-white text-3xl font-semibold tracking-[2px]",
+          "text-white text-3xl font-semibold tracking-[2px] font-space-grotesk",
           "flex items-center",
           className
         )}

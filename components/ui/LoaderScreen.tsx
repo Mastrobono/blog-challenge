@@ -97,7 +97,6 @@ const LoaderScreen = React.forwardRef<HTMLDivElement, LoaderScreenProps>(
 
             const lottieContainer = lottieContainerRef.current;
             const container = containerRef.current;
-            const disclaimer = disclaimerRef.current;
 
             // Set initial state: white background, lottie hidden below
             gsap.set(container, {

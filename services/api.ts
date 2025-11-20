@@ -102,7 +102,7 @@ export async function fetchPosts(params: FetchPostsParams = {}): Promise<ApiPost
 /**
  * Fetch a single post by ID
  */
-export async function fetchPostById(id: number): Promise<{ data: ApiPost; meta: {} }> {
+export async function fetchPostById(id: number): Promise<{ data: ApiPost; meta: Record<string, never> }> {
   // Use Strapi format for populate
   const queryParams = new URLSearchParams();
   queryParams.append("populate", "coverImg");

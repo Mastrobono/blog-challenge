@@ -62,7 +62,7 @@ export async function createPost(data: CreatePostData): Promise<CreatePostRespon
       let responseText = "";
       try {
         responseText = await response.clone().text();
-      } catch (e) {
+      } catch (_e) {
         // If we can't read the text, continue with empty string
       }
       
@@ -71,7 +71,7 @@ export async function createPost(data: CreatePostData): Promise<CreatePostRespon
           errorData = await response.json();
           console.error("Error Response (JSON):", errorData);
           console.error("Full error object:", JSON.stringify(errorData, null, 2));
-        } catch (e) {
+        } catch (_e) {
           console.error("Error Response (Text):", responseText);
           errorData = { message: responseText || "Failed to create post" };
         }
@@ -134,7 +134,7 @@ export async function getRelatedPosts(): Promise<RelatedPost[]> {
       let responseText = "";
       try {
         responseText = await response.clone().text();
-      } catch (e) {
+      } catch (_e) {
         // If we can't read the text, continue with empty string
       }
       
@@ -143,7 +143,7 @@ export async function getRelatedPosts(): Promise<RelatedPost[]> {
           errorData = await response.json();
           console.error("Error Response (JSON):", errorData);
           console.error("Full error object:", JSON.stringify(errorData, null, 2));
-        } catch (e) {
+        } catch (_e) {
           console.error("Error Response (Text):", responseText);
           errorData = { message: responseText || "Failed to fetch posts" };
         }

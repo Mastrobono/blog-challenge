@@ -21,7 +21,7 @@ const ViewedPost = React.forwardRef<HTMLDivElement, ViewedPostProps>(
         {...props}
       >
         {/* Post Headline */}
-        <p className="font-sans flex-1 text-base-semibold-tight  text-neutral-gray-light leading-[120%]">
+        <p className="flex-1 text-base-semibold-tight  text-neutral-gray-light leading-[120%] font-space-grotesk">
           {postHead}
         </p>
 

@@ -10,9 +10,9 @@ import {
   getMostViewedPosts, 
   mapApiPostToCardProps,
   getRelatedPostById,
-  mapRelatedPostToCardProps
+  mapRelatedPostToCardProps,
+  getAllPosts
 } from "@/lib/posts";
-import { getAllPosts } from "@/lib/posts";
 import { getParsedMarkdownContent } from "@/lib/markdown";
 import { CardProps } from "@/components/features/Card";
 import Footer from "@/components/layout/Footer";
@@ -102,7 +102,7 @@ export default async function PostPage({
         } catch (error) {
             // If fetch fails (e.g., 404), RelatedPostHero will handle it
             // Only log non-404 errors to avoid noise
-            if (error instanceof Error && (error as any).status !== 404) {
+            if (error instanceof Error && "status" in error && (error as { status?: number }).status !== 404) {
                 console.error("Failed to fetch related post:", error);
             }
         }
@@ -126,14 +126,14 @@ export default async function PostPage({
                     fallbackCardProps={cardProps}
                     showBackButton={true}
                 />
-            ) : (
+            ) : cardProps ? (
                 <Hero
                     variant="post"
                     className="!mt-0"
-                    card={cardProps!}
+                    card={cardProps}
                     showBackButton={true}
                 />
-            )}
+            ) : null}
 
             <Container className="bg-neutral-white">
                 {/* Three Column Layout */}

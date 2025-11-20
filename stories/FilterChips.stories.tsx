@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import FilterChips from "../components/features/FilterChips";
-import { FilterProvider } from "../contexts/FilterContext";
 import Container from "../components/ui/Container";
 import React, { useState } from "react";
 

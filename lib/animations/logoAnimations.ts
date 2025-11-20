@@ -114,7 +114,7 @@ export function animateLogoShapeHover(
 ): gsap.core.Timeline | null {
   if (!element) return null;
 
-  const { duration = 2, ease = "none", currentRotation = 0 } = config;
+  const { duration = 2, ease = "none" } = config;
 
   const tl = gsap.timeline({ repeat: -1 });
 

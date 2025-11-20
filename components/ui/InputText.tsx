@@ -22,7 +22,7 @@ const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
       className,
       label,
       error: externalError,
-      helpText,
+      helpText: _helpText,
       disabled,
       value,
       defaultValue,

@@ -22,7 +22,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       className,
       label,
       error: externalError,
-      helpText,
+      helpText: _helpText,
       disabled,
       value,
       defaultValue,
@@ -67,6 +67,24 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       return internalRef.current?.value ?? defaultValue ?? "";
     };
 
+    // Internal validation function
+    const performValidation = useCallback(
+      (inputValue: string) => {
+        if (!validate) {
+          return null;
+        }
+
+        const validationResult = validate(inputValue);
+        const errorMessage = validationResult || null;
+        
+        setInternalError(errorMessage);
+        onValidationChange?.(errorMessage);
+        
+        return errorMessage;
+      },
+      [validate, onValidationChange]
+    );
+
     // Sync hasValue with actual input value on mount and when props change
     useEffect(() => {
       if (value !== undefined) {
@@ -88,6 +106,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           performValidation(initialValue);
         }
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // Only run on mount
 
     // Determine current state - use hasValue (updated by handleChange) as primary source
@@ -132,24 +151,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         "opacity-0 invisible": !showLabel,
         "opacity-100 visible": showLabel,
       }
-    );
-
-    // Internal validation function
-    const performValidation = useCallback(
-      (inputValue: string) => {
-        if (!validate) {
-          return null;
-        }
-
-        const validationResult = validate(inputValue);
-        const errorMessage = validationResult || null;
-        
-        setInternalError(errorMessage);
-        onValidationChange?.(errorMessage);
-        
-        return errorMessage;
-      },
-      [validate, onValidationChange]
     );
 
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {

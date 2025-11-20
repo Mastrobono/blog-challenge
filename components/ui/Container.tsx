@@ -3,7 +3,7 @@
 import React from "react";
 import { clsx } from "clsx";
 
-export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type ContainerProps = React.HTMLAttributes<HTMLDivElement>;
 
 const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
   function Container({ className, children, ...props }, ref) {

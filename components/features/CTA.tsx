@@ -35,7 +35,7 @@ const CTA = React.forwardRef<HTMLDivElement, CTAProps>(
         {...props}
       >
         {/* Text */}
-        <p className="text-white text-left font-sans text-xl-regular-tight">
+        <p className="text-white text-left text-xl-regular-tight font-space-grotesk">
           <span className="font-normal">{normalText} </span>
           <span className="font-semibold">{semiboldText}</span>
         </p>

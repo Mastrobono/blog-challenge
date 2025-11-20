@@ -24,7 +24,7 @@ const SocialMedia = React.forwardRef<HTMLDivElement, SocialMediaProps>(
       >
         {/* Share on Label */}
         {showLabel && (
-          <p className="font-sans mb-6 text-lg-bold-tight text-neutral-black">
+          <p className="mb-6 text-lg-bold-tight text-neutral-black font-space-grotesk">
             Share on
           </p>
         )}

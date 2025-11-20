@@ -96,7 +96,14 @@
 
 @layer base {
   body {
-    @apply font-sans antialiased;
+    font-family: var(--font-space-grotesk, "Space Grotesk"), "Space Grotesk", sans-serif;
+    @apply antialiased;
+  }
+}
+
+@layer utilities {
+  .font-space-grotesk {
+    font-family: var(--font-space-grotesk, "Space Grotesk"), "Space Grotesk", sans-serif;
   }
 
   /* View Transitions support */
@@ -240,6 +247,21 @@
   @media (min-width: 768px) {
     .text-card-title-large {
       font-size: var(--font-size-card-title-large);
+    }
+  }
+
+  .text-card-title-small {
+    font-size: 18px;
+    font-weight: var(--font-weight-card-title);
+    line-height: var(--line-height-card-title);
+  }
+
+  /* In mobile, all cards in GridCard should use small title size when stacked */
+  @media (max-width: 767px) {
+    .grid-card-mobile-small-title h3 {
+      font-size: 18px;
+      font-weight: var(--font-weight-card-title);
+      line-height: var(--line-height-card-title);
     }
   }
 
