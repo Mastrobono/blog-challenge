@@ -4,16 +4,17 @@ import MostViewedPosts from "@/components/features/MostViewedPosts";
 import { FilteredPostsProvider, FilterChipsContent, FilteredPostsContent } from "@/components/features/FilteredPostsWithChips";
 import { getMostRecentPost, getAllPosts, extractUniqueTopics, getMostViewedPosts, mapApiPostToCardProps } from "@/lib/posts";
 import Footer from "@/components/layout/Footer";
-import HomePageWithLoader from "@/components/features/HomePageWithLoader";
 
 /**
  * ISR (Incremental Static Regeneration) Configuration
  * - revalidate: 3600 seconds (1 hour)
  * - Page is regenerated in the background after 1 hour
+ * 
+ * This page is used for performance metrics (PageSpeed Insights) without the loader
  */
 export const revalidate = 3600; // Revalidate every hour
 
-export default async function HomePage() {
+export default async function NoLoaderPage() {
   // Fetch data in Server Component
   const mostRecentPost = await getMostRecentPost();
   const allPosts = await getAllPosts(100);
@@ -29,8 +30,8 @@ export default async function HomePage() {
   // Get initial 9 posts for FilteredPosts (not used directly, but kept for future use)
   const _initialPosts = allPosts.slice(0, 9);
 
-  // Content component
-  const pageContent = (
+  // Render content directly without loader wrapper
+  return (
     <Container>
 
       {
@@ -70,7 +71,5 @@ export default async function HomePage() {
       <Footer />
     </Container>
   );
-
-  // Always wrap with HomePageWithLoader
-  return <HomePageWithLoader>{pageContent}</HomePageWithLoader>;
 }
+
