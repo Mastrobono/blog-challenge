@@ -3,7 +3,6 @@ import { Space_Grotesk } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
 import "./globals.css";
 import NavbarClient from "@/components/layout/NavbarClient";
-import Footer from "@/components/layout/Footer";
 import { QueryClientProvider } from "@/providers/QueryClientProvider";
 import { LenisProvider } from "@/providers/LenisProvider";
 import { ModalProvider } from "@/contexts/ModalContext";
@@ -14,6 +13,7 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -64,8 +64,8 @@ export default function RootLayout({
 }>) {
   return (
     <ViewTransitions>
-      <html lang="en" translate="no">
-        <body className={`${spaceGrotesk.variable} antialiased`}>
+      <html lang="en" translate="no" className={`${spaceGrotesk.variable} ${spaceGrotesk.className}`}>
+        <body className="antialiased">
           <ViewTransitionProvider>
             <LenisProvider>
               <QueryClientProvider>

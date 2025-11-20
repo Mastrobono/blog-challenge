@@ -14,17 +14,23 @@ export function ModalWrapper() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const lenis = useLenis();
   const [shouldRender, setShouldRender] = useState(false);
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   // Create portal container
   useEffect(() => {
     if (typeof window !== "undefined") {
-      containerRef.current = document.createElement("div");
-      containerRef.current.setAttribute("id", "modal-root");
-      document.body.appendChild(containerRef.current);
+      const containerElement = document.createElement("div");
+      containerElement.setAttribute("id", "modal-root");
+      document.body.appendChild(containerElement);
+      containerRef.current = containerElement;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setContainer(containerElement);
 
       return () => {
         if (containerRef.current) {
           document.body.removeChild(containerRef.current);
+          containerRef.current = null;
+          setContainer(null);
         }
       };
     }
@@ -59,13 +65,15 @@ export function ModalWrapper() {
   // Handle render state
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShouldRender(true);
     }
   }, [isOpen]);
 
   // Animate modal in/out
   useEffect(() => {
-    if (!containerRef.current || !shouldRender) return;
+    const container = containerRef.current;
+    if (!container || !shouldRender) return;
 
     const overlay = overlayRef.current;
     const modal = modalRef.current;
@@ -124,12 +132,12 @@ export function ModalWrapper() {
     }
   }, [isOpen, shouldRender]);
 
-  if (!shouldRender || !containerRef.current) return null;
+  if (!shouldRender || !container) return null;
 
   return createPortal(
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-5"
+      className="fixed inset-0 z-50 flex items-center justify-center p-5 font-space-grotesk"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
       onClick={(e) => {
         // Close modal when clicking directly on the overlay
@@ -153,7 +161,7 @@ export function ModalWrapper() {
         <Modal onClose={closeModal} />
       </div>
     </div>,
-    containerRef.current
+    container
   );
 }
 

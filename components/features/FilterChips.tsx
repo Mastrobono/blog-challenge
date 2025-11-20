@@ -21,10 +21,6 @@ const FilterChips = React.forwardRef<HTMLDivElement, FilterChipsProps>(
     { className, title = "Topics", chips, activeChips, onChipToggle, ...props },
     ref
   ) {
-    const handleChipClick = (chipId: string) => {
-      onChipToggle(chipId);
-    };
-
     const handleAllClick = () => {
       // If "all" is already active, do nothing (or you could clear all)
       // Otherwise, activate "all" which should clear other selections
@@ -47,7 +43,7 @@ const FilterChips = React.forwardRef<HTMLDivElement, FilterChipsProps>(
           {...props}
         >
         {/* Title */}
-        <h2 className="text-lg-bold font-sans text-white h-max ">
+        <h2 className="text-lg-bold text-white h-max font-space-grotesk">
           {title}
         </h2>
 

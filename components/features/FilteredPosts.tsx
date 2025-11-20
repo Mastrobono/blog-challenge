@@ -91,6 +91,7 @@ const FilteredPosts = React.forwardRef<HTMLDivElement, FilteredPostsProps>(
     // Reset displayed count when filters change
     const queryFiltersKey = useMemo(() => queryFilters.join(","), [queryFilters]);
     useEffect(() => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDisplayedCount(9);
     }, [queryFiltersKey]);
     

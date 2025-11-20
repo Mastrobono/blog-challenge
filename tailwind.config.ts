@@ -28,7 +28,11 @@ const config: Config = {
         "markdown-blockquote-border": "#d8f34e", // Border color for blockquotes
       },
       fontFamily: {
-        sans: ["var(--font-space-grotesk)", "Space Grotesk", "sans-serif"],
+        sans: [
+          'var(--font-space-grotesk, "Space Grotesk")',
+          '"Space Grotesk"',
+          "sans-serif",
+        ],
       },
       fontSize: {
         "h-related": [

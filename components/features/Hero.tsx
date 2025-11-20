@@ -2,6 +2,7 @@
 
 import React from "react";
 import { clsx } from "clsx";
+import Link from "next/link";
 import Card, { CardProps } from "./Card";
 
 export interface HeroProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -22,9 +23,9 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
 
     // Back button component
     const backButton = showBackButton ? (
-      <a
+      <Link
         href="/"
-        className="flex items-center gap-2 text-white font-sans hover:opacity-80 transition-opacity text-sm-semibold-medium"
+        className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity text-sm-semibold-medium font-space-grotesk"
       >
         <img
           src="/assets/back-blog.svg"
@@ -33,7 +34,7 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
           aria-hidden="true"
         />
         <span>Blog</span>
-      </a>
+      </Link>
     ) : null;
 
     return (
@@ -59,8 +60,8 @@ const Hero = React.forwardRef<HTMLDivElement, HeroProps>(
           <div className="flex flex-col gap-6">
             {/* Label */}
             {label && (
-              <div className="text-white font-sans text-lg-semibold-tight md:block hidden">
-                <p className="text-white font-sans text-lg-semibold-tight">
+              <div className="text-white text-lg-semibold-tight md:block hidden font-space-grotesk">
+                <p className="text-white text-lg-semibold-tight font-space-grotesk">
                   {label}
                 </p>
               </div>

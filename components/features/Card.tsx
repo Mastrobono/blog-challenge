@@ -16,7 +16,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   slug: string;
   readTime: string;
   variant?: "dark" | "light";
-  titleSize?: "normal" | "large";
+  titleSize?: "normal" | "large" | "small";
   badge?: string;
   avatar?: {
     src: string;
@@ -51,7 +51,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       hideBadge = false,
       priority = false,
       enableViewTransition = false,
-      onReadClick,
+      onReadClick: _onReadClick,
       ...props
     },
     ref
@@ -65,6 +65,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
     // Reset image loaded state when imageSrc changes
     useEffect(() => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsImageLoaded(false);
     }, [imageSrc]);
 
@@ -86,6 +87,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       const isPostPage = hasAvatar && hideBadge;
       if (enableViewTransition && (hasActionButton || isPostPage)) {
         const name = registerViewTransitionName(numericId);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setViewTransitionName(name);
       }
     }, [enableViewTransition, hasActionButton, hasAvatar, hideBadge, numericId, registerViewTransitionName]);
@@ -197,6 +199,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                 {
                   "text-card-title": titleSize === "normal",
                   "text-card-title-large": titleSize === "large",
+                  "text-card-title-small": titleSize === "small",
                   "text-neutral-white": variant === "dark",
                   "text-neutral-black": variant === "light",
                 }

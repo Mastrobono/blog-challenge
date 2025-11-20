@@ -20,7 +20,8 @@ const GridCard = React.forwardRef<HTMLDivElement, GridCardProps>(
     const [currentMainCardPosition, setCurrentMainCardPosition] = useState<"left" | "right">(mainCardPosition);
 
     // Toggle main card position (only used when cards.length === 3)
-    const toggleMainCardPosition = useCallback(() => {
+    // Currently not used but kept for future functionality
+    const _toggleMainCardPosition = useCallback(() => {
       setCurrentMainCardPosition((prev) => (prev === "left" ? "right" : "left"));
     }, []);
 
@@ -70,11 +71,11 @@ const GridCard = React.forwardRef<HTMLDivElement, GridCardProps>(
     if (equalSize) {
       // Equal size mode: 3 columns with 32px gap
       return (
-        <div ref={ref} className={clsx("flex flex-col gap-10", className)} {...props}>
+        <div ref={ref} className={clsx("flex flex-col gap-10 grid-card-mobile-small-title", className)} {...props}>
           <div className="w-full md:grid md:grid-cols-3 md:gap-8 md:items-stretch md:h-full md:min-h-[600px]">
             {cards.map((card, index) => (
               <div key={index} className="flex h-full md:min-h-full">
-                <Card {...addPriorityToCard(card, index)} />
+                <Card {...addPriorityToCard(card, index)} titleSize="small" />
               </div>
             ))}
           </div>
@@ -85,10 +86,13 @@ const GridCard = React.forwardRef<HTMLDivElement, GridCardProps>(
 
     // Main card + 2 secondary cards layout
     const mainCardData = addPriorityToCard(cards[0], 0);
-    const secondaryCards = cards.slice(1).map((card, index) => addPriorityToCard(card, index + 1));
+    const secondaryCards = cards.slice(1).map((card, index) => ({
+      ...addPriorityToCard(card, index + 1),
+      titleSize: "small" as const, // Smaller font size for stacked cards when there are 3 cards (desktop)
+    }));
 
     return (
-      <div ref={ref} className={clsx("flex flex-col gap-10", className)} {...props}>
+      <div ref={ref} className={clsx("flex flex-col gap-10 grid-card-mobile-small-title", className)} {...props}>
         <div className="w-full md:min-h-[600px]">
       <div
         className={clsx(

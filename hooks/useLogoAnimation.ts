@@ -4,12 +4,8 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import {
   animateLogoShape,
-  animateLogoText,
   animateLogoShapeHover,
-} from "@/lib/animations/logoAnimations";
-import type {
-  LogoShapeAnimationConfig,
-  LogoTextAnimationConfig,
+  type LogoShapeAnimationConfig,
 } from "@/lib/animations/logoAnimations";
 
 /**

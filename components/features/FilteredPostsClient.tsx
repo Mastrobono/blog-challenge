@@ -59,7 +59,7 @@ function FilteredPostsContent({
  * Initial load shows 9 posts, then allows client-side filtering
  */
 export default function FilteredPostsClient({
-  initialPosts,
+  initialPosts: _initialPosts,
   allPosts,
   initialTopics,
   showFilterChipsSeparately = false,

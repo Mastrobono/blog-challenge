@@ -19,6 +19,7 @@ const InputFile = React.forwardRef<HTMLInputElement, InputFileProps>(
       error,
       className,
       onChange,
+      value: _value, // File inputs are uncontrolled - value prop is ignored
       ...props
     },
     ref

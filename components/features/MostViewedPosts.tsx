@@ -34,7 +34,7 @@ const MostViewedPosts = React.forwardRef<HTMLDivElement, MostViewedPostsProps>(
 
         <p
           className={clsx(
-            "font-sans mb-6 text-lg-semibold-tight",
+            "mb-6 text-lg-semibold-tight font-space-grotesk",
             variant === "dark" ? "text-neutral-white" : "text-neutral-black"
           )}
         >
@@ -43,7 +43,7 @@ const MostViewedPosts = React.forwardRef<HTMLDivElement, MostViewedPostsProps>(
 
         {/* Posts List */}
         <div className="flex flex-col">
-          {posts.map((post, index) => (
+          {posts.map((post) => (
            
               <ViewedPost
                 key={post.id}

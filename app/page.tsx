@@ -2,12 +2,15 @@ import Container from "@/components/ui/Container";
 import Hero from "@/components/features/Hero";
 import MostViewedPosts from "@/components/features/MostViewedPosts";
 import { FilteredPostsProvider, FilterChipsContent, FilteredPostsContent } from "@/components/features/FilteredPostsWithChips";
-import { getMostRecentPost, getAllPosts, extractUniqueTopics, getMostViewedPosts } from "@/lib/posts";
-import { mapApiPostToCardProps } from "@/lib/posts";
+import { getMostRecentPost, getAllPosts, extractUniqueTopics, getMostViewedPosts, mapApiPostToCardProps } from "@/lib/posts";
 import Footer from "@/components/layout/Footer";
 import HomePageWithLoader from "@/components/features/HomePageWithLoader";
 
-export default async function HomePage() {
+interface HomePageProps {
+  searchParams: Promise<{ noLoader?: string }>;
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
   // Fetch data in Server Component
   const mostRecentPost = await getMostRecentPost();
   const allPosts = await getAllPosts(100);
@@ -20,12 +23,16 @@ export default async function HomePage() {
     label: topic,
   }));
 
-  // Get initial 9 posts for FilteredPosts
-  const initialPosts = allPosts.slice(0, 9);
+  // Get initial 9 posts for FilteredPosts (not used directly, but kept for future use)
+  const _initialPosts = allPosts.slice(0, 9);
 
-  return (
-    <HomePageWithLoader>
-      <Container>
+  // Check if loader should be skipped via query param
+  const params = await searchParams;
+  const skipLoader = params.noLoader === "true";
+
+  // Content component (reusable for both with and without loader)
+  const pageContent = (
+    <Container>
 
       {
         mostRecentPost && (
@@ -62,7 +69,13 @@ export default async function HomePage() {
 
       {/* Footer outside columns */}
       <Footer />
-      </Container>
-    </HomePageWithLoader>
+    </Container>
   );
+
+  // Render with or without loader based on query param
+  if (skipLoader) {
+    return pageContent;
+  }
+
+  return <HomePageWithLoader>{pageContent}</HomePageWithLoader>;
 }

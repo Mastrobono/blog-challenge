@@ -334,6 +334,7 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           "bg-primary-lime border-2 border-neutral-black",
           "shadow-hard-black",
           "p-10",
+          "font-space-grotesk", // Ensure font consistency in Portal context
           className
         )}
         {...props}
@@ -360,18 +361,18 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           <div className="w-full md:max-w-[480px] flex flex-col items-center gap-6">
             {/* Headline */}
             {!isSuccess ? (
-              <h2 className="text-h-modal-tight text-center font-sans text-brand-indigo">
+              <h2 className="text-h-modal-tight text-center text-brand-indigo">
                 {headline}
               </h2>
             ) : (
-              <h2 className="text-h-modal-tight text-center font-sans text-brand-indigo">
+              <h2 className="text-h-modal-tight text-center text-brand-indigo">
                 {successText}
               </h2>
             )}
 
             {/* Subheadline (only show in form state) */}
             {!isSuccess && (
-              <p className="text-b-modal text-center font-sans text-neutral-dark-gray">
+              <p className="text-b-modal text-center text-neutral-dark-gray">
                 {subheadline}
               </p>
             )}
@@ -415,7 +416,7 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
                     name="image"
                     control={control}
                     rules={{ required: "Image is required" }}
-                    render={({ field: { onChange, value, ...field }, fieldState: { error } }) => (
+                    render={({ field: { onChange, value, ref, ...field }, fieldState: { error } }) => (
                       <div className="flex flex-col">
                         <InputFile
                           {...field}

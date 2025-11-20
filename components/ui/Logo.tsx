@@ -20,7 +20,7 @@ export interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
  */
 const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
   function Logo(
-    { className, animate = true, ...props },
+    { className, animate: _animate = true, ...props },
     ref
   ) {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -32,6 +32,7 @@ const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
       (node: SVGSVGElement | null) => {
         // Set hoverRef (for hover animation)
         if (hoverRef) {
+          // eslint-disable-next-line react-hooks/immutability
           (hoverRef as React.MutableRefObject<SVGSVGElement | null>).current =
             node;
         }

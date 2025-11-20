@@ -18,7 +18,7 @@ export type ChipProps =
 const Chip = React.forwardRef<HTMLDivElement, ChipProps>(
   ({ className, variant = "default", onRemove, children, ...props }, ref) => {
     const baseClasses =
-      "inline-flex items-center gap-2 h-[46px] px-4 rounded-[56px] transition-colors duration-200 ease-in-out cursor-pointer";
+      "inline-flex items-center gap-2 h-[45px] px-4 rounded-[56px] transition-colors duration-200 ease-in-out cursor-pointer";
 
     const stateClasses = clsx({
       // Active (Selected) state - always has remove button

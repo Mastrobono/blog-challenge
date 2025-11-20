@@ -3,9 +3,8 @@
 import React, { useCallback, useMemo } from "react";
 import { clsx } from "clsx";
 import ActionButton from "../ui/ActionButton";
-import Card from "./Card";
+import Card, { CardProps } from "./Card";
 import CardShimmer from "./CardShimmer";
-import { CardProps } from "./Card";
 import { useRelatedPosts } from "@/hooks/useRelatedPosts";
 import { useModal } from "@/contexts/ModalContext";
 
@@ -23,7 +22,7 @@ export interface RelatedPostsProps extends React.HTMLAttributes<HTMLDivElement> 
 const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
   function RelatedPosts({ className, excludePostId, ...props }, ref) {
     const { openModal } = useModal();
-    const { data: posts, isLoading, isFetching, error } = useRelatedPosts();
+    const { data: posts, isLoading, error } = useRelatedPosts();
 
     // Handle new post click - open modal
     const handleNewPostClick = useCallback(() => {
@@ -57,7 +56,7 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
       return (
         <div ref={ref} className={clsx("flex flex-col gap-[10px] ", className)} {...props}>
           <div className="flex items-center justify-between">
-            <h2 className="font-sans text-h-related-tight text-neutral-black">
+            <h2 className="text-h-related-tight text-neutral-black font-space-grotesk">
               Related Posts
             </h2>
             <ActionButton variant="light" onClick={handleNewPostClick}>
@@ -86,7 +85,7 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
       return (
         <div ref={ref} className={clsx("flex flex-col gap-[10px] ", className)} {...props}>
           <div className="flex items-center justify-between">
-            <h2 className="font-sans text-h-related-tight text-neutral-black">
+            <h2 className="text-h-related-tight text-neutral-black font-space-grotesk">
               Related Posts
             </h2>
             <ActionButton variant="light" onClick={handleNewPostClick}>
@@ -108,7 +107,7 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
       return (
         <div ref={ref} className={clsx("flex flex-col gap-[10px] ", className)} {...props}>
           <div className="flex items-center justify-between">
-            <h2 className="font-sans text-h-related-tight text-neutral-black">
+            <h2 className="text-h-related-tight text-neutral-black font-space-grotesk">
               Related Posts
             </h2>
             <ActionButton variant="light" onClick={handleNewPostClick}>
@@ -126,7 +125,7 @@ const RelatedPosts = React.forwardRef<HTMLDivElement, RelatedPostsProps>(
       <div ref={ref} className={clsx("flex flex-col gap-[10px] ", className)} {...props}>
         {/* First Row: Title and ActionButton */}
         <div className="flex items-center justify-between">
-          <h2 className="font-sans text-h-related-responsive text-neutral-black">
+          <h2 className="text-h-related-responsive text-neutral-black font-space-grotesk">
             Related Posts
           </h2>
           <ActionButton variant="light" onClick={handleNewPostClick}>
